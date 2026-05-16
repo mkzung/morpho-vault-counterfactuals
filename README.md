@@ -170,4 +170,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-*Author: Maxim Gorbuk — CS founder, Stanford GSB Venture Capital Initiative research affiliate, Bocconi MSc INTENT incoming. Open to DeFi associate / curator research roles. See [linkedin.com/in/gorbuk](https://linkedin.com/in/gorbuk) and [github.com/mkzung](https://github.com/mkzung).*
+*Author: Max Gorbuk — CS founder, Stanford GSB Venture Capital Initiative Researcher, Bocconi MSc INTENT incoming. Open to DeFi associate / curator research roles. See [linkedin.com/in/gorbuk](https://linkedin.com/in/gorbuk) and [github.com/mkzung](https://github.com/mkzung).*

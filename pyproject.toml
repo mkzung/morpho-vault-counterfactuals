@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Historical replay + counterfactual stress testing for Morpho MetaMorpho vaults."
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "Maxim Gorbuk" }]
+authors = [{ name = "Max Gorbuk" }]
 requires-python = ">=3.10"
 dependencies = [
   "pandas>=2.0",
