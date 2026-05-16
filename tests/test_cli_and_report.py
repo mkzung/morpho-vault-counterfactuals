@@ -124,11 +124,15 @@ def test_cli_analyze_rejects_neither_vault_nor_fixture(capsys):
 
 def test_cli_sweep_collateral(capsys):
     # Use `=` syntax so argparse doesn't treat the leading `-` as a flag
-    rc = main([
-        "sweep", "collateral",
-        "--fixture", "steakhouse_usdc_snapshot_demo",
-        "--shocks=-0.05,-0.20,-0.50",
-    ])
+    rc = main(
+        [
+            "sweep",
+            "collateral",
+            "--fixture",
+            "steakhouse_usdc_snapshot_demo",
+            "--shocks=-0.05,-0.20,-0.50",
+        ]
+    )
     assert rc == 0
     out = capsys.readouterr().out
     assert "Collateral cascade sweep" in out
@@ -137,11 +141,15 @@ def test_cli_sweep_collateral(capsys):
 
 
 def test_cli_sweep_oracle(capsys):
-    rc = main([
-        "sweep", "oracle",
-        "--fixture", "steakhouse_usdc_snapshot_demo",
-        "--shocks=-0.05,-0.20",
-    ])
+    rc = main(
+        [
+            "sweep",
+            "oracle",
+            "--fixture",
+            "steakhouse_usdc_snapshot_demo",
+            "--shocks=-0.05,-0.20",
+        ]
+    )
     assert rc == 0
     out = capsys.readouterr().out
     assert "Oracle freeze sweep" in out
@@ -149,10 +157,17 @@ def test_cli_sweep_oracle(capsys):
 
 def test_cli_writes_output_file(tmp_path, capsys):
     out_file = tmp_path / "brief.md"
-    rc = main([
-        "analyze", "--fixture", "steakhouse_usdc_snapshot_demo",
-        "--format", "markdown", "--output", str(out_file),
-    ])
+    rc = main(
+        [
+            "analyze",
+            "--fixture",
+            "steakhouse_usdc_snapshot_demo",
+            "--format",
+            "markdown",
+            "--output",
+            str(out_file),
+        ]
+    )
     assert rc == 0
     assert out_file.exists()
     content = out_file.read_text()

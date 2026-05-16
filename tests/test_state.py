@@ -100,12 +100,18 @@ def test_vault_snapshot_hhi_diversified():
 
 def test_vault_history_latest():
     s1 = VaultSnapshot(
-        vault_address="0xv", block=1, timestamp=1,
-        total_assets=100, total_shares=100,
+        vault_address="0xv",
+        block=1,
+        timestamp=1,
+        total_assets=100,
+        total_shares=100,
     )
     s2 = VaultSnapshot(
-        vault_address="0xv", block=2, timestamp=2,
-        total_assets=200, total_shares=200,
+        vault_address="0xv",
+        block=2,
+        timestamp=2,
+        total_assets=200,
+        total_shares=200,
     )
     h = VaultHistory(vault_address="0xv", snapshots=[s2, s1])
     assert h.latest().block == 2

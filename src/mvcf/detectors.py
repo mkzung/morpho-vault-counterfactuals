@@ -136,7 +136,9 @@ class CollateralCascade:
 
     def __init__(self, shock_pct: float = -0.20):
         if not -0.99 < shock_pct < 0.0:
-            raise ValueError(f"shock_pct must be a negative fraction in (-0.99, 0), got {shock_pct}")
+            raise ValueError(
+                f"shock_pct must be a negative fraction in (-0.99, 0), got {shock_pct}"
+            )
         self.shock_pct = shock_pct
 
     def run(self, snapshot: VaultSnapshot) -> DetectorResult:
@@ -171,9 +173,7 @@ class CollateralCascade:
             liquidity_gap += gap
             bucket["liquidity_gap"] = gap
 
-        fraction_liquidatable = (
-            (liquidatable_debt / total_debt) if total_debt > 0 else 0.0
-        )
+        fraction_liquidatable = (liquidatable_debt / total_debt) if total_debt > 0 else 0.0
         return DetectorResult(
             name="CollateralCascade",
             headline_metric=fraction_liquidatable,
@@ -277,8 +277,7 @@ class UtilizationInversion:
             evidence={
                 "target_util_max": self.target_util_max,
                 "breached_markets": [
-                    {"market_id": m.market_id, "utilization": m.utilization}
-                    for m in breached
+                    {"market_id": m.market_id, "utilization": m.utilization} for m in breached
                 ],
             },
         )
@@ -310,9 +309,7 @@ class LiquidationLatency:
         self.eth_price_usd = eth_price_usd
 
     def _liquidation_cost_usd(self) -> float:
-        return (
-            self.gas_price_gwei * 1e-9 * self.liquidation_gas * self.eth_price_usd
-        )
+        return self.gas_price_gwei * 1e-9 * self.liquidation_gas * self.eth_price_usd
 
     def run(self, snapshot: VaultSnapshot) -> DetectorResult:
         cost_usd = self._liquidation_cost_usd()

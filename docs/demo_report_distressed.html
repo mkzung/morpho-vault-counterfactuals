@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vault risk brief — 0xDEAD…0001</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    margin: 0; padding: 24px 32px; max-width: 1200px; margin: 0 auto;
+    color: #0f172a; background: #fafafa; line-height: 1.5;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: #64748b; font-size: 13px; margin-bottom: 24px; }
+  .meta { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+           gap: 12px; margin-bottom: 24px; }
+  .meta-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
+  .meta-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+  .meta-value { font-size: 18px; font-weight: 600; margin-top: 2px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .det-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+               padding: 16px; border-left: 4px solid #e2e8f0; }
+  .det-name { font-weight: 600; font-size: 13px; }
+  .det-metric { font-size: 28px; font-weight: 700; margin: 6px 0 2px; }
+  .det-unit { font-size: 11px; color: #64748b; }
+  .det-interp { font-size: 12px; color: #334155; margin-top: 8px; line-height: 1.4; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 10px;
+            font-weight: 700; color: white; vertical-align: middle; margin-left: 6px; }
+  h2 { font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin: 32px 0 14px; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 800px) { .charts { grid-template-columns: 1fr; } }
+  .chart-wrap { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; height: 320px; }
+  .chart-title { font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e2e8f0;
+           border-radius: 8px; overflow: hidden; font-size: 12px; }
+  th { background: #f1f5f9; padding: 8px 10px; text-align: left; font-weight: 600; }
+  td { padding: 8px 10px; border-top: 1px solid #f1f5f9; font-family: ui-monospace, monospace; }
+  .hot { color: #dc2626; font-weight: 700; }
+  ul { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 14px 14px 32px; font-size: 13px; }
+  ul li { margin-bottom: 6px; }
+  footer { color: #94a3b8; font-size: 11px; margin-top: 32px; text-align: center; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<h1>Vault risk brief — <code>0xDEAD…0001</code></h1>
+<div class="sub">Generated 2026-05-16 17:42 UTC · block <code>19,500,001</code> · 1 markets · 3 borrowers analyzed</div>
+
+<div class="meta">
+  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">5,000,000 (units / 1e6)</div></div>
+  <div class="meta-card"><div class="meta-label">HHI</div><div class="meta-value">0.421</div></div>
+  <div class="meta-card"><div class="meta-label">Top-1 share</div><div class="meta-value">60.0%</div></div>
+  <div class="meta-card"><div class="meta-label">Markets</div><div class="meta-value">1</div></div>
+</div>
+
+<h2>Counterfactual risk dashboard</h2>
+<div class="grid">
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">OracleFreezeReplay <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_bad_debt</div><div class="det-interp">If oracle freezes while collateral drifts -10%, 100.0% of outstanding debt (2 positions) would breach liquidation threshold but remain unliquidatable until oracle updates.</div></div>
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">CollateralCascade <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_liquidatable_debt</div><div class="det-interp">At a -20% collateral shock, 100.0% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 0 loan-asset units across affected markets.</div></div>
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">DepositorExitShock <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">96.7%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 3,000,000,000,000 vs idle supply 100,000,000,000 → 96.7% would be queue-rationed until borrowers repay.</div></div>
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">UtilizationInversion <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_markets_above_target</div><div class="det-interp">1 / 1 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.</div></div>
+<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LiquidationLatency <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_unprofitable_to_liquidate</div><div class="det-interp">At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in positions where liquidation profit &lt; cost (1 small positions) — these accrue bad-debt risk during oracle-shock windows.</div></div>
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">LTVDistributionStress <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_debt_within_5pp_of_lltv</div><div class="det-interp">100.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 85.45%. A small adverse oracle move would push this debt into liquidation.</div></div>
+</div>
+
+<h2>Sensitivity sweeps</h2>
+<div class="charts">
+  <div class="chart-wrap"><div class="chart-title">Collateral cascade — % debt liquidatable vs shock magnitude</div><canvas id="cascadeChart"></canvas></div>
+  <div class="chart-wrap"><div class="chart-title">Oracle freeze — % bad debt vs collateral drift while stale</div><canvas id="oracleChart"></canvas></div>
+  <div class="chart-wrap"><div class="chart-title">Borrower LTV histogram (count of positions)</div><canvas id="ltvChart"></canvas></div>
+  <div class="chart-wrap"><div class="chart-title">Liquidation latency — % unprofitable vs gas price</div><canvas id="gasChart"></canvas></div>
+</div>
+
+<h2>Per-market state</h2>
+<table>
+<thead><tr>
+<th>Market</th><th style="text-align:right">Supply</th><th style="text-align:right">Borrow</th>
+<th style="text-align:right">Utilization</th><th style="text-align:right">LLTV</th><th style="text-align:right">Supply cap</th>
+</tr></thead>
+<tbody>
+<tr><td><code>0x0000ef34e2fc…</code></td><td style='text-align:right'>5,000,000,000,000</td><td style='text-align:right'>4,900,000,000,000</td><td style='text-align:right' class="hot">98.0%</td><td style='text-align:right'>86%</td><td style='text-align:right'>5,000,000,000,000</td></tr>
+</tbody>
+</table>
+
+<h2>Suggested curator actions</h2>
+<ul>
+<li><b>OracleFreezeReplay > 5%</b> — review oracle update cadence; consider Chainlink fallback or oracle-router timeout.</li>
+<li><b>CollateralCascade > 30%</b> — lower LLTV on the concentrated market(s) by 1-3 percentage points.</li>
+<li><b>DepositorExitShock > 20%</b> — reduce vault-level supply cap to free idle supply.</li>
+<li><b>UtilizationInversion ≥ 50%</b> — raise IRM upper rate or reallocate via the MetaMorpho <code>reallocate()</code> flow.</li>
+<li><b>LTVDistributionStress > 40%</b> — lower LLTV proactively before the next adverse oracle move.</li>
+</ul>
+
+<footer>
+Generated by <a href="https://github.com/mkzung/morpho-vault-counterfactuals">morpho-vault-counterfactuals</a> ·
+counterfactual risk monitoring for Morpho MetaMorpho vaults
+</footer>
+
+<script>
+const cascade = {"labels": ["-2%", "-5%", "-10%", "-15%", "-20%", "-25%", "-30%", "-40%", "-50%"], "values": [67.13, 99.98, 99.98, 99.98, 99.98, 99.98, 99.98, 99.98, 99.98]};
+const oracle  = {"labels": ["-2%", "-5%", "-8%", "-10%", "-15%", "-20%", "-25%"], "values": [0.0, 0.0, 99.98, 99.98, 99.98, 99.98, 99.98]};
+const ltv     = {"labels": ["0.00-0.20", "0.20-0.40", "0.40-0.60", "0.60-0.70", "0.70-0.80", "0.80-0.85", "0.85-0.90", "0.90-0.95", "0.95-1.00", "1.00-1.10"], "values": [1, 0, 0, 0, 0, 1, 1, 0, 0, 0]};
+const gas     = {"labels": ["10 gwei", "20 gwei", "30 gwei", "50 gwei", "80 gwei", "120 gwei", "200 gwei", "400 gwei"], "values": [0.02, 0.02, 0.02, 0.02, 32.87, 100.0, 100.0, 100.0]};
+
+const common = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } },
+             x: { ticks: { font: { size: 10 } } } },
+};
+
+new Chart(document.getElementById('cascadeChart'), {
+  type: 'line',
+  data: { labels: cascade.labels, datasets: [{
+    label: '% liquidatable', data: cascade.values, fill: true,
+    backgroundColor: 'rgba(220,38,38,0.15)', borderColor: '#dc2626', tension: 0.25
+  }] }, options: common
+});
+
+new Chart(document.getElementById('oracleChart'), {
+  type: 'line',
+  data: { labels: oracle.labels, datasets: [{
+    label: '% bad debt', data: oracle.values, fill: true,
+    backgroundColor: 'rgba(249,115,22,0.15)', borderColor: '#f97316', tension: 0.25
+  }] }, options: common
+});
+
+new Chart(document.getElementById('ltvChart'), {
+  type: 'bar',
+  data: { labels: ltv.labels, datasets: [{
+    label: '# positions', data: ltv.values,
+    backgroundColor: '#1d4ed8'
+  }] }, options: common
+});
+
+new Chart(document.getElementById('gasChart'), {
+  type: 'line',
+  data: { labels: gas.labels, datasets: [{
+    label: '% unprofitable', data: gas.values, fill: true,
+    backgroundColor: 'rgba(2,132,199,0.15)', borderColor: '#0284c7', tension: 0.25
+  }] }, options: common
+});
+</script>
+</body>
+</html>

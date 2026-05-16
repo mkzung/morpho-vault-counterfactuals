@@ -2,13 +2,18 @@
 
 **Historical replay + counterfactual stress testing for Morpho MetaMorpho vaults.**
 
+[![CI](https://github.com/mkzung/morpho-vault-counterfactuals/actions/workflows/ci.yml/badge.svg)](https://github.com/mkzung/morpho-vault-counterfactuals/actions/workflows/ci.yml)
+[![Python 3.10 | 3.11 | 3.12](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/downloads/)
+[![mypy: strict](https://img.shields.io/badge/mypy-checked-2a6db2.svg)](https://mypy.readthedocs.io/)
+[![ruff](https://img.shields.io/badge/lint-ruff-261230.svg)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
+
 A Python framework that asks: *"if oracle X had frozen at block T, or if the top depositor exited during a fast market move, or if collateral price step-shocks −20% in one block — how much of this vault's debt would have become bad debt, and how much depositor capital would have been rationed at the withdraw queue?"*
 
 This is curator-side counterfactual reasoning, the kind of question a Morpho curator (Re7 Labs, Steakhouse, MEV Capital, Block Analitica) needs to answer before they raise an LLTV, increase a supply cap, or admit a new market into a managed vault.
 
-[![CI](https://github.com/mkzung/morpho-vault-counterfactuals/actions/workflows/ci.yml/badge.svg)](https://github.com/mkzung/morpho-vault-counterfactuals/actions/workflows/ci.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+🔍 **Live demo report (no clone needed):** [open the rendered HTML dashboard](https://raw.githack.com/mkzung/morpho-vault-counterfactuals/main/docs/demo_report.html) · [distressed-vault variant](https://raw.githack.com/mkzung/morpho-vault-counterfactuals/main/docs/demo_report_distressed.html)
 
 ---
 
@@ -37,6 +42,28 @@ This is curator-side counterfactual reasoning, the kind of question a Morpho cur
 | `LTVDistributionStress` | What fraction of debt is within 5pp of LLTV today — i.e., where a small adverse oracle move triggers a liquidation? |
 
 The six-detector + reproducible-replay shape is borrowed from my [Inca Challenge #492](https://github.com/mkzung/ethbtc-suspicious-patterns) framework (forensic on-chain detection on ETH/BTC markets — pytest 46/46, public dashboard) and re-applied to a new domain.
+
+## Architecture at a glance
+
+```mermaid
+flowchart LR
+  A[Morpho Blue API<br/>fetch_vault_snapshot] -->|GraphQL| B[VaultSnapshot<br/>Pydantic models]
+  C[Offline fixtures<br/>data/fixtures/*.json] --> B
+  B --> D{run_all_detectors}
+  D --> E1[OracleFreezeReplay]
+  D --> E2[CollateralCascade]
+  D --> E3[DepositorExitShock]
+  D --> E4[UtilizationInversion]
+  D --> E5[LiquidationLatency]
+  D --> E6[LTVDistributionStress]
+  E1 & E2 & E3 & E4 & E5 & E6 --> F[DetectorResult]
+  F --> G1[summarize - text]
+  F --> G2[as_markdown - curator brief]
+  F --> G3[as_json - downstream pipe]
+  F --> G4[as_html - Chart.js dashboard]
+```
+
+Pure-function detectors. All I/O isolated in `fetch.py`. Same snapshot in, same metrics out — bit-for-bit reproducible.
 
 ## Quick start
 

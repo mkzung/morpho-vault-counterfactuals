@@ -25,6 +25,7 @@ from collections.abc import Sequence
 
 from .detectors import CollateralCascade, OracleFreezeReplay
 from .fetch import fetch_vault_snapshot, load_fixture
+from .html_report import as_html
 from .report import as_json, as_markdown
 from .runner import run_all_detectors, summarize
 
@@ -58,6 +59,8 @@ def _cmd_analyze(args: argparse.Namespace) -> int:
         out = as_json(snap, results)
     elif args.format == "markdown":
         out = as_markdown(snap, results)
+    elif args.format == "html":
+        out = as_html(snap, results)
     else:
         print(f"error: unknown format {args.format!r}", file=sys.stderr)
         return 2
@@ -109,6 +112,40 @@ def _cmd_sweep(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_compare(args: argparse.Namespace) -> int:
+    """Compare counterfactual risk across multiple vaults side-by-side."""
+    fixtures = [f.strip() for f in args.fixtures.split(",")] if args.fixtures else []
+    vaults = [v.strip() for v in args.vaults.split(",")] if args.vaults else []
+    if not fixtures and not vaults:
+        print("error: pass either --fixtures a,b,c or --vaults 0xA,0xB,0xC", file=sys.stderr)
+        return 2
+
+    snaps = [load_fixture(f) for f in fixtures] + [
+        fetch_vault_snapshot(v, block=args.block) for v in vaults
+    ]
+    rows = []
+    for snap in snaps:
+        results = run_all_detectors(snap)
+        rows.append((snap, {r.name: r.headline_metric for r in results}))
+
+    # Pretty-print table
+    addrs = [s.vault_address[:6] + "…" + s.vault_address[-4:] for s, _ in rows]
+    detectors = list(rows[0][1].keys())
+    col_w = max(20, max(len(d) for d in detectors))
+    addr_w = max(15, max(len(a) for a in addrs) + 2)
+
+    print(f"\n{'Detector':<{col_w}}" + "".join(f"{a:>{addr_w}}" for a in addrs))
+    print("─" * (col_w + addr_w * len(addrs)))
+    for d in detectors:
+        row = f"{d:<{col_w}}"
+        for _, metrics in rows:
+            v = metrics[d]
+            row += f"{v:>{addr_w - 1}.1%} "
+        print(row)
+    print()
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="mvcf",
@@ -120,13 +157,15 @@ def build_parser() -> argparse.ArgumentParser:
     a = sub.add_parser("analyze", help="Run all six detectors on a vault")
     a.add_argument("--vault", help="Live MetaMorpho vault address (0x...)")
     a.add_argument("--fixture", help="Name of a checked-in fixture (data/fixtures/<name>.json)")
-    a.add_argument("--block", type=int, default=None, help="Block to pin a live query (default: latest)")
+    a.add_argument(
+        "--block", type=int, default=None, help="Block to pin a live query (default: latest)"
+    )
     a.add_argument("--oracle-drift", type=float, default=-0.10)
     a.add_argument("--collateral-shock", type=float, default=-0.20)
     a.add_argument("--top-n-exit", type=int, default=1)
     a.add_argument("--util-band", type=float, default=0.92)
     a.add_argument("--gas-gwei", type=float, default=30.0)
-    a.add_argument("--format", choices=["text", "json", "markdown"], default="text")
+    a.add_argument("--format", choices=["text", "json", "markdown", "html"], default="text")
     a.add_argument("--output", help="Write to file instead of stdout")
     a.set_defaults(func=_cmd_analyze)
 
@@ -142,6 +181,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Comma-separated list of shock fractions (negative)",
     )
     s.set_defaults(func=_cmd_sweep)
+
+    # compare
+    c = sub.add_parser("compare", help="Compare risk metrics across multiple vaults")
+    c.add_argument("--fixtures", help="Comma-separated fixture names")
+    c.add_argument("--vaults", help="Comma-separated vault addresses (live fetch)")
+    c.add_argument("--block", type=int, default=None)
+    c.set_defaults(func=_cmd_compare)
 
     return p
 

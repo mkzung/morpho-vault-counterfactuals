@@ -9,6 +9,7 @@ from .detectors import (
     UtilizationInversion,
 )
 from .fetch import fetch_vault_snapshot, load_fixture, load_history
+from .html_report import as_html
 from .report import as_json, as_markdown
 from .runner import run_all_detectors, summarize
 from .state import BorrowerPosition, MarketState, VaultHistory, VaultSnapshot
@@ -26,6 +27,7 @@ __all__ = [
     "UtilizationInversion",
     "VaultHistory",
     "VaultSnapshot",
+    "as_html",
     "as_json",
     "as_markdown",
     "fetch_vault_snapshot",
