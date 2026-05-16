@@ -1,5 +1,5 @@
 {
-  "_comment": "Synthetic snapshot styled after the Steakhouse USDC MetaMorpho vault on mainnet (vault address 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB). Block and amounts are ILLUSTRATIVE — used for reproducible offline testing and notebook demo. Oracle prices follow Morpho's convention: price = real_price * 10^(36 + loan_decimals - collateral_decimals). USDC has 6 decimals. For live snapshots, see notebooks/01_live_fetch_demo.ipynb. Real Steakhouse USDC vault on mainnet exceeds $500M TVL as of mid-2025; numbers here are scaled down.",
+  "_comment": "Synthetic snapshot styled after the Steakhouse USDC MetaMorpho vault on mainnet (vault address 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB). Block and amounts are ILLUSTRATIVE — used for reproducible offline testing and notebook demo. Oracle prices follow Morpho's convention: price = real_price * 10^(36 + loan_decimals - collateral_decimals). USDC has 6 decimals. For live snapshots, run `mvcf analyze --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB` or open live-data/steakhouse_usdc_latest.html.",
   "vault_address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
   "block": 19500000,
   "timestamp": 1716000000,

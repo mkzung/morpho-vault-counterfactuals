@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/mkzung/morpho-vault-counterfactuals/actions/workflows/ci.yml/badge.svg)](https://github.com/mkzung/morpho-vault-counterfactuals/actions/workflows/ci.yml)
 [![Python 3.10 | 3.11 | 3.12](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/downloads/)
-[![mypy: strict](https://img.shields.io/badge/mypy-checked-2a6db2.svg)](https://mypy.readthedocs.io/)
+[![mypy: checked](https://img.shields.io/badge/mypy-checked-2a6db2.svg)](https://mypy.readthedocs.io/)
 [![ruff](https://img.shields.io/badge/lint-ruff-261230.svg)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
@@ -15,7 +15,7 @@ This is curator-side counterfactual reasoning, the kind of question a Morpho cur
 
 🔍 **Live demo (no clone needed):** [**mkzung.github.io/morpho-vault-counterfactuals**](https://mkzung.github.io/morpho-vault-counterfactuals/) — pre-rendered HTML dashboards on demo fixtures.
 
-📡 **Live mainnet data:** [`live-data/`](./live-data/) — a nightly GitHub Actions cron fetches the current state of the real [Steakhouse USDC vault](https://etherscan.io/address/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB) (>$120M TVL on Ethereum mainnet) and commits a fresh HTML/JSON/Markdown report. The repo doubles as a public time-series of curator metrics for one of Morpho's flagship vaults.
+📡 **Live mainnet data:** [`live-data/`](./live-data/) — a nightly GitHub Actions cron fetches the current state of the real [Steakhouse USDC vault](https://etherscan.io/address/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB) on Ethereum mainnet (current vault TVL is visible in the live JSON snapshot — typically >$100M) and commits a fresh HTML/JSON/Markdown report. The repo doubles as a public time-series of vault-level curator metrics. Note: market-level detectors (`UtilizationInversion`) are fully populated from the public Morpho Blue API; borrower-position-dependent detectors require an additional subgraph fetch which is not yet wired in — these read zero on live snapshots until that's added.
 
 🎛 **Interactive Streamlit dashboard:** `streamlit run streamlit_app.py` after `pip install streamlit`.
 
@@ -109,18 +109,19 @@ print(summarize(results))                              # human-readable text
 brief = as_markdown(snap, results)                     # paste-ready curator brief
 ```
 
-Sample output:
+Sample output on the demo fixture:
 ```
 ── Vault counterfactual risk summary ──
 
-[OracleFreezeReplay]  0.025 fraction_bad_debt
-  → If oracle freezes while collateral drifts -10%, 2.5% of outstanding debt
-    (1 position) would breach liquidation threshold but remain unliquidatable
-    until oracle updates.
+[OracleFreezeReplay]  0.437 fraction_bad_debt
+  → If the oracle freezes while collateral drifts -10%, 43.7% of outstanding debt
+    (4 positions) crosses the bad-debt frontier — LTV > 0.952 at LIF 5% —
+    meaning seized collateral could not cover debt-plus-incentive even once
+    the oracle updates.
 
-[CollateralCascade]   0.121 fraction_liquidatable_debt
-  → At a -20% collateral shock, 12.1% of debt becomes liquidatable; liquidity
-    gap (debt minus idle supply) is 0 loan-asset units across affected markets.
+[CollateralCascade]   0.730 fraction_liquidatable_debt
+  → At a -20% collateral shock, 73.0% of debt becomes liquidatable;
+    liquidity gap (debt minus idle supply) is 0 loan-asset units.
 ...
 ```
 

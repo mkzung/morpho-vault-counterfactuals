@@ -7,7 +7,7 @@ This module pairs two `VaultSnapshot` instances (or two pre-computed
 detector result sets) and produces a delta report. Used by:
 
   - `mvcf diff old.json new.json` (CLI)
-  - The nightly snapshot pipeline (see `.github/workflows/snapshot.yml`)
+  - The nightly snapshot pipeline (see `.github/workflows/live-snapshot.yml`)
   - Streamlit dashboard for inline trend visualization
 """
 

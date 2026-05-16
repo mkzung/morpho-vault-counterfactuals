@@ -60,20 +60,23 @@ def generate_synthetic_vault(
             )
         )
 
+    # Map market id → collateral decimals (set when the market was constructed)
+    market_decimals = {m.market_id: (18 if i % 2 == 0 else 8) for i, m in enumerate(markets)}
+
     borrowers: list[BorrowerPosition] = []
     for i in range(n_borrowers):
         mkt = rng.choice(markets)
         # Mix of healthy + near-LLTV borrowers
         target_ltv = rng.uniform(0.20, mkt.lltv * 0.99)
-        # Pick collateral amount, derive debt to achieve target LTV
-        collateral_units = 18 if "C" * 39 + str(markets.index(mkt)) in mkt.collateral_token else 8
+        collateral_units = market_decimals[mkt.market_id]
         collateral = rng.randint(10**collateral_units, 10**collateral_units * 1000)
         debt = int(collateral * mkt.oracle_price_36dec * target_ltv / 10**36)
         if debt > 0:
             borrowers.append(
                 BorrowerPosition(
                     market_id=mkt.market_id,
-                    borrower=f"0x{'B' * 38}{i:04x}"[:42],
+                    # Pad each borrower address distinctly (was: collisions every 256)
+                    borrower=f"0x{i:040x}",
                     collateral=collateral,
                     debt_assets=debt,
                 )

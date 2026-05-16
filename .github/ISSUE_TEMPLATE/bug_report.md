@@ -17,8 +17,8 @@ mvcf analyze --fixture <name>
 ```
 
 ## Environment
-- `mvcf --version`:
-- Python:
+- `mvcf --version`:  (e.g., `mvcf 0.4.0`)
+- Python:  (e.g., 3.11.7)
 - OS:
 
 ## Severity

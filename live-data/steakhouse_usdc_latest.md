@@ -1,7 +1,7 @@
 # Vault risk brief — `0xBEEF…64CB`
 
 - **Block:** 0
-- **Total assets (loan-asset units):** `126,018,297,727,329`
+- **Total assets (loan-asset units):** `126,020,072,171,933`
 - **Markets:** 7
 - **Borrowers analyzed:** 0
 - **HHI (depositor concentration):** `0.000` (top-1 = 0.0%)
@@ -15,23 +15,24 @@
 | `DepositorExitShock` | `0.000` | fraction_rationed |
 | `UtilizationInversion` | `0.000` | fraction_markets_above_target |
 | `LiquidationLatency` | `0.000` | fraction_unprofitable_to_liquidate |
-| `LTVDistributionStress` | `0.000` | fraction_near_lltv |
+| `LTVDistributionStress` | `0.000` | fraction_debt_within_5pp_of_lltv |
 
 ## Per-detector findings
 
 ### OracleFreezeReplay
 
-If oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 positions) would breach liquidation threshold but remain unliquidatable until oracle updates.
+If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 positions) crosses the bad-debt frontier — LTV > 0.952 at LIF 5% — meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
   "drift_pct": -0.1,
-  "liquidation_incentive": 0.05,
-  "unhealthy_debt_assets": 0,
+  "bad_debt_lif": 0.05,
+  "bad_debt_frontier_ltv": 0.9523809523809523,
+  "bad_debt_assets": 0,
   "total_debt_assets": 0,
-  "unliquidatable_positions": 0,
+  "bad_debt_positions": 0,
   "per_market": {}
 }
 ```
@@ -58,7 +59,7 @@ At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (de
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 0 vs idle supply 46,723,775,765,793 → 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 0 vs idle supply 46,149,419,927,989 → 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
@@ -66,7 +67,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 46,723,775,765,793 → 0.
 {
   "top_n": 1,
   "exit_demand_loan_assets": 0,
-  "idle_supply_loan_assets": 46723775765793,
+  "idle_supply_loan_assets": 46149419927989,
   "rationing_gap": 0,
   "hhi": 0.0
 }
@@ -91,7 +92,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 46,723,775,765,793 → 0.
 
 ### LiquidationLatency
 
-At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in positions where liquidation profit < cost (0 small positions) — these accrue bad-debt risk during oracle-shock windows.
+At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 0 positions where liquidator profit (debt × 5%) is below cost — these accrue bad-debt risk during oracle-shock windows.
 
 <details><summary>Evidence</summary>
 
@@ -99,6 +100,9 @@ At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in posi
 {
   "gas_price_gwei": 30.0,
   "eth_price_usd": 3500.0,
+  "lif": 0.05,
+  "loan_decimals": 6,
+  "loan_price_usd": 1.0,
   "cost_per_liquidation_usd": 36.75,
   "unprofitable_positions": 0,
   "unprofitable_debt_assets": 0,
@@ -110,7 +114,17 @@ At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in posi
 
 ### LTVDistributionStress
 
-No borrower positions to analyze.
+No borrower positions in the snapshot — LTV distribution is undefined. (Live MetaMorpho fetches via the public Blue API do not currently include individual borrower positions; this detector reads zero on live snapshots until a subgraph fetch is wired in.)
+
+<details><summary>Evidence</summary>
+
+```json
+{
+  "n_positions": 0
+}
+```
+
+</details>
 
 ## Suggested curator actions
 

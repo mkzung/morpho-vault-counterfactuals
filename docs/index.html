@@ -41,14 +41,16 @@
 <div class="card">
   <h2>🔥 Distressed single-market vault</h2>
   <p>Edge case: one market, top-1 depositor &gt; 60%, utilization &gt; 95%,
-     borrowers within 1pp of LLTV. All six detectors trip CRITICAL.</p>
+     borrowers within 1pp of LLTV. Five of six detectors trip CRITICAL
+     (LiquidationLatency stays OK because the single position is large enough
+     to be profitably liquidated).</p>
   <a class="btn alt" href="./demo_report_distressed.html">View report →</a>
   <div class="meta">block 19,500,001 · synthetic worst-case fixture</div>
 </div>
 
 <div class="card">
   <h2>📂 Project repository</h2>
-  <p>Source code, the six counterfactual detectors, 50+ tests, Streamlit
+  <p>Source code, the six counterfactual detectors, 54 tests, Streamlit
      dashboard, multi-format CLI (text / json / markdown / html), and the
      full design rationale.</p>
   <a class="btn" href="https://github.com/mkzung/morpho-vault-counterfactuals">GitHub →</a>

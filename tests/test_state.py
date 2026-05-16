@@ -29,11 +29,19 @@ def test_market_utilization_half():
     assert m.utilization == 0.5
 
 
-def test_market_utilization_capped_at_one():
-    # Defensive: shouldn't happen on-chain (borrow ≤ supply by protocol invariant),
-    # but the model should not panic if it does.
+def test_market_utilization_above_one_means_bad_debt():
+    # Borrow > supply signals a bad-debt situation (interest-accrued borrows
+    # exceeded supplies). We DO NOT cap at 1.0 because that would mask the
+    # signal the curator needs to see.
     m = make_market(total_supply_assets=100, total_borrow_assets=150)
-    assert m.utilization == 1.0
+    assert m.utilization == 1.5
+
+
+def test_market_utilization_zero_supply_with_debt_is_infinite():
+    # Protocol-invariant violation: debt with no supply. Returns inf so detectors
+    # see it as the strongest possible signal, not silently swallowed.
+    m = make_market(total_supply_assets=0, total_borrow_assets=100)
+    assert m.utilization == float("inf")
 
 
 def test_market_utilization_zero_supply():
@@ -66,8 +74,16 @@ def test_borrower_ltv_basic():
     assert abs(ltv - 1000 / 3300) < 1e-6
 
 
-def test_borrower_ltv_zero_collateral():
+def test_borrower_ltv_zero_collateral_with_debt_is_infinite():
+    """Bad-debt invariant violation — debt with no collateral. Returns inf
+    so detectors flag it instead of treating as a healthy 0% LTV position."""
     pos = BorrowerPosition(market_id="x", borrower="y", collateral=0, debt_assets=100)
+    assert pos.ltv(10**36) == float("inf")
+
+
+def test_borrower_ltv_zero_collateral_no_debt_is_zero():
+    """A closed position (no collateral, no debt) is 0 LTV, not inf."""
+    pos = BorrowerPosition(market_id="x", borrower="y", collateral=0, debt_assets=0)
     assert pos.ltv(10**36) == 0.0
 
 

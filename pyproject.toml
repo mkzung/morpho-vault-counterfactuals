@@ -4,18 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "morpho-vault-counterfactuals"
-version = "0.1.0"
+version = "0.4.0"
 description = "Historical replay + counterfactual stress testing for Morpho MetaMorpho vaults."
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Max Gorbuk" }]
 requires-python = ">=3.10"
 dependencies = [
-  "pandas>=2.0",
-  "numpy>=1.24",
   "pydantic>=2.5",
   "httpx>=0.27",
-  "rich>=13.0",
 ]
 
 [project.optional-dependencies]
@@ -24,7 +21,16 @@ dev = [
   "pytest-cov>=4.1",
   "ruff>=0.6",
   "mypy>=1.8",
+  "pandas>=2.0",
+  "matplotlib>=3.8",
+]
+streamlit = [
+  "streamlit>=1.30",
+  "pandas>=2.0",
+]
+notebook = [
   "jupyter>=1.0",
+  "pandas>=2.0",
   "matplotlib>=3.8",
 ]
 
@@ -47,8 +53,12 @@ ignore = ["E501"]
 
 [tool.mypy]
 python_version = "3.10"
-strict = false
 ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unreachable = true
+check_untyped_defs = true
+disallow_untyped_defs = false   # gradual typing — set true once docstrings + tests caught up
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

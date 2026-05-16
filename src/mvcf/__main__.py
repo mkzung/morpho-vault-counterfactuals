@@ -22,13 +22,23 @@ from __future__ import annotations
 import argparse
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
+from . import __version__
 from .detectors import CollateralCascade, OracleFreezeReplay
 from .diff import diff_snapshots, summarize_diff
 from .fetch import fetch_vault_snapshot, load_fixture
 from .html_report import as_html
 from .report import as_json, as_markdown
 from .runner import run_all_detectors, summarize
+
+
+def _list_fixtures() -> list[str]:
+    """Available offline fixture names — used in error messages."""
+    fixtures_dir = Path(__file__).resolve().parent.parent.parent / "data" / "fixtures"
+    if not fixtures_dir.exists():
+        return []
+    return sorted(p.stem for p in fixtures_dir.glob("*.json"))
 
 
 def _cmd_analyze(args: argparse.Namespace) -> int:
@@ -39,20 +49,35 @@ def _cmd_analyze(args: argparse.Namespace) -> int:
         print("error: pass either --vault <addr> or --fixture <name>", file=sys.stderr)
         return 2
 
-    snap = (
-        fetch_vault_snapshot(args.vault, block=args.block)
-        if args.vault
-        else load_fixture(args.fixture)
-    )
+    try:
+        snap = (
+            fetch_vault_snapshot(args.vault, block=args.block)
+            if args.vault
+            else load_fixture(args.fixture)
+        )
+    except FileNotFoundError:
+        print(
+            f"error: fixture '{args.fixture}' not found in data/fixtures/.\n"
+            f"  available: " + ", ".join(_list_fixtures()),
+            file=sys.stderr,
+        )
+        return 2
+    except Exception as e:
+        print(f"error: failed to load snapshot — {e}", file=sys.stderr)
+        return 2
 
-    results = run_all_detectors(
-        snap,
-        oracle_drift=args.oracle_drift,
-        collateral_shock=args.collateral_shock,
-        top_n_exit=args.top_n_exit,
-        util_band=args.util_band,
-        gas_gwei=args.gas_gwei,
-    )
+    try:
+        results = run_all_detectors(
+            snap,
+            oracle_drift=args.oracle_drift,
+            collateral_shock=args.collateral_shock,
+            top_n_exit=args.top_n_exit,
+            util_band=args.util_band,
+            gas_gwei=args.gas_gwei,
+        )
+    except ValueError as e:
+        print(f"error: invalid detector parameter — {e}", file=sys.stderr)
+        return 2
 
     if args.format == "text":
         out = summarize(results)
@@ -99,13 +124,13 @@ def _cmd_sweep(args: argparse.Namespace) -> int:
     elif args.kind == "oracle":
         values = [float(s.strip()) for s in args.shocks.split(",")]
         print(f"Oracle freeze sweep on {snap.vault_address[:10]}…  (block {snap.block})\n")
-        print(f"  {'drift':>8}  {'bad_debt_frac':>15}  {'unliquidatable_positions':>25}")
+        print(f"  {'drift':>8}  {'bad_debt_frac':>15}  {'bad_debt_positions':>20}")
         for drift in values:
             res = OracleFreezeReplay(drift_pct=drift).run(snap)
             print(
                 f"  {drift:>+8.0%}  "
                 f"{res.headline_metric:>15.1%}  "
-                f"{res.evidence['unliquidatable_positions']:>25}"
+                f"{res.evidence['bad_debt_positions']:>20}"
             )
     else:
         print(f"error: unknown sweep kind {args.kind!r}", file=sys.stderr)
@@ -160,7 +185,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="mvcf",
         description="Counterfactual risk monitor for Morpho MetaMorpho vaults.",
+        epilog="docs: https://github.com/mkzung/morpho-vault-counterfactuals",
     )
+    p.add_argument("--version", action="version", version=f"mvcf {__version__}")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     # analyze
@@ -170,13 +197,43 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument(
         "--block", type=int, default=None, help="Block to pin a live query (default: latest)"
     )
-    a.add_argument("--oracle-drift", type=float, default=-0.10)
-    a.add_argument("--collateral-shock", type=float, default=-0.20)
-    a.add_argument("--top-n-exit", type=int, default=1)
-    a.add_argument("--util-band", type=float, default=0.92)
-    a.add_argument("--gas-gwei", type=float, default=30.0)
-    a.add_argument("--format", choices=["text", "json", "markdown", "html"], default="text")
-    a.add_argument("--output", help="Write to file instead of stdout")
+    a.add_argument(
+        "--oracle-drift",
+        type=float,
+        default=-0.10,
+        help="Signed collateral drift while oracle is stale, as a fraction. Negative=downside. Default: -0.10.",
+    )
+    a.add_argument(
+        "--collateral-shock",
+        type=float,
+        default=-0.20,
+        help="Step shock to collateral price, as a (negative) fraction. Default: -0.20.",
+    )
+    a.add_argument(
+        "--top-n-exit",
+        type=int,
+        default=1,
+        help="Number of top depositors to simulate exiting simultaneously. Default: 1.",
+    )
+    a.add_argument(
+        "--util-band",
+        type=float,
+        default=0.92,
+        help="Utilization threshold above which a market is flagged. Default: 0.92.",
+    )
+    a.add_argument(
+        "--gas-gwei",
+        type=float,
+        default=30.0,
+        help="Assumed gas price in gwei for liquidation-cost calculation. Default: 30.0.",
+    )
+    a.add_argument(
+        "--format",
+        choices=["text", "json", "markdown", "html"],
+        default="text",
+        help="Output format. Default: text.",
+    )
+    a.add_argument("--output", help="Write to file instead of stdout.")
     a.set_defaults(func=_cmd_analyze)
 
     # sweep

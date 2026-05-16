@@ -50,10 +50,17 @@ class MarketState(BaseModel):
 
     @property
     def utilization(self) -> float:
-        """Borrow / supply utilization, [0,1]."""
+        """Borrow / supply utilization.
+
+        Normally in [0, 1]. Values > 1 indicate a bad-debt situation
+        (interest-accrued borrows exceed deposits); we DO NOT cap, so the
+        signal reaches detectors honestly. Supply=0 returns 0.0 if borrow
+        is also 0; otherwise returns inf (protocol-invariant violation
+        the curator must see).
+        """
         if self.total_supply_assets == 0:
-            return 0.0
-        return min(1.0, self.total_borrow_assets / self.total_supply_assets)
+            return float("inf") if self.total_borrow_assets > 0 else 0.0
+        return self.total_borrow_assets / self.total_supply_assets
 
     @property
     def lltv(self) -> float:
@@ -71,21 +78,25 @@ class BorrowerPosition(BaseModel):
     collateral: int = Field(ge=0)
     debt_assets: int = Field(ge=0, description="debt in loan-asset units")
 
-    def ltv(self, oracle_price_36dec: int, collateral_decimals: int = 18) -> float:
-        """Current LTV given an oracle price.
+    def ltv(self, oracle_price_36dec: int) -> float:
+        """Current LTV given a Morpho oracle price (36-decimal convention).
 
-        ltv = debt / (collateral * oracle_price / 1e36)
+        Math: `ltv = debt / (collateral * oracle_price / 1e36)`.
+        The 36-decimal price encodes the decimal adjustment between collateral
+        and loan tokens, so no separate decimal parameter is needed.
 
-        We rescale to a float in [0,1+]; >1 means underwater.
+        Returns a float in [0, ∞]:
+          - 0 ⟺ no debt (healthy)
+          - >0 and <LLTV ⟺ healthy
+          - ≥LLTV ⟺ liquidatable
+          - inf ⟺ debt with zero collateral (bad-debt invariant violation)
         """
         if self.collateral == 0:
-            return 0.0
-        # collateral_value_in_loan_units = collateral * oracle_price / 1e36
-        # (oracle convention encodes the decimal adjustment between assets)
+            return float("inf") if self.debt_assets > 0 else 0.0
         denom = self.collateral * oracle_price_36dec
         if denom == 0:
-            return 0.0
-        return float(self.debt_assets * 10**36) / float(denom)
+            return float("inf") if self.debt_assets > 0 else 0.0
+        return self.debt_assets * 10**36 / denom
 
 
 class VaultSnapshot(BaseModel):

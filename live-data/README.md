@@ -23,12 +23,15 @@ free daily risk dashboard inside 5 minutes.
 
 ## Caveats
 
-- Borrower positions are not currently fetched (would require an
-  additional subgraph query); detector outputs that depend on individual
-  borrower LTVs (`OracleFreezeReplay`, `CollateralCascade`,
-  `LTVDistributionStress`) will report `0.0` until that's wired in.
-  Market-level detectors (`UtilizationInversion`, `DepositorExitShock`)
-  are fully populated.
+- The public Morpho Blue API returns market-level state but not individual
+  borrower positions or per-depositor shares. Of the six detectors, only
+  `UtilizationInversion` runs against fully-populated live data; the
+  others (`OracleFreezeReplay`, `CollateralCascade`, `DepositorExitShock`,
+  `LiquidationLatency`, `LTVDistributionStress`) require borrower /
+  depositor data that needs an additional subgraph fetch — not yet wired in.
+  They will read `0.0` on live snapshots until that's added.
+- This is honest disclosure: the offline fixtures exist precisely because
+  the framework needs full vault state to demonstrate all six detectors.
 - The Morpho Blue API occasionally rate-limits unauthenticated calls.
   If you fork this and want to run it frequently, add `MORPHO_API_KEY`
   as a repository secret.

@@ -15,7 +15,7 @@ from .report import as_json, as_markdown
 from .runner import run_all_detectors, summarize
 from .state import BorrowerPosition, MarketState, VaultHistory, VaultSnapshot
 
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "BorrowerPosition",

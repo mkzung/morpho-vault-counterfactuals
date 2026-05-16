@@ -49,30 +49,46 @@ class DetectorResult:
 
 
 class OracleFreezeReplay:
-    """What fraction of debt becomes bad debt if oracle freezes for N blocks
-    while collateral drifts by `drift_pct`?
+    """What fraction of debt becomes **bad debt** if the oracle freezes while
+    the true collateral price falls by `drift_pct`?
 
     Curator interpretation: an oracle stuck at a stale price during a fast
-    market move is the most common pre-liquidation failure mode. We measure
-    the gap between the on-paper LTV (using stale oracle) and the "true" LTV
-    (using shocked price) for every borrower. Borrowers whose true LTV
-    exceeds LLTV+liquidation-incentive cushion are *unliquidatable* in the
-    window and represent unrealized bad debt.
+    market move is the most common pre-liquidation failure mode. With the
+    oracle stuck, liquidators see no signal — but the *true* solvency of
+    the position has degraded. A position becomes **uneconomic to liquidate
+    even when the oracle eventually updates** when the true LTV exceeds
+    `1 / (1 + LIF)` (typically ~0.952 at 5% LIF), because the seized
+    collateral is then worth less than the debt being repaid net of
+    liquidator incentive. That is the bad-debt frontier this detector
+    measures.
+
+    Args:
+      drift_pct: signed collateral price drift while oracle is stale.
+        Negative for downside scenarios (the common case); positive
+        rejected because positive drift cannot create bad debt.
+      bad_debt_lif: Morpho Liquidation Incentive Factor — bonus paid to
+        the liquidator on seized collateral. Default 0.05 (the typical
+        major-asset LIF on Morpho Blue); set per-market for safer assets.
     """
 
-    def __init__(self, drift_pct: float = -0.10, liquidation_incentive: float = 0.05):
-        # drift_pct: how much true collateral price moves while oracle is stale
-        # liquidation_incentive: Morpho default ~5% for major assets
-        if not -0.99 < drift_pct < 0.99:
-            raise ValueError(f"drift_pct must be in (-0.99, 0.99), got {drift_pct}")
+    def __init__(self, drift_pct: float = -0.10, bad_debt_lif: float = 0.05):
+        if not -0.99 < drift_pct <= 0.0:
+            raise ValueError(f"drift_pct must be in (-0.99, 0.0], got {drift_pct}")
+        if not 0.0 < bad_debt_lif < 1.0:
+            raise ValueError(f"bad_debt_lif must be in (0, 1), got {bad_debt_lif}")
         self.drift_pct = drift_pct
-        self.liquidation_incentive = liquidation_incentive
+        self.bad_debt_lif = bad_debt_lif
 
     def run(self, snapshot: VaultSnapshot) -> DetectorResult:
-        unhealthy_debt = 0
+        bad_debt = 0
         total_debt = 0
-        unliquidatable_count = 0
+        bad_debt_positions = 0
         per_market: dict[str, dict[str, int]] = {}
+
+        # Bad-debt frontier: collateral_value < debt × (1 + LIF) means the
+        # liquidator gets less collateral than debt-with-incentive.
+        # Equivalently, position is bad-debt when LTV > 1 / (1 + LIF).
+        bad_debt_ltv = 1.0 / (1.0 + self.bad_debt_lif)
 
         markets_by_id = {m.market_id: m for m in snapshot.markets}
 
@@ -80,41 +96,40 @@ class OracleFreezeReplay:
             mkt = markets_by_id.get(pos.market_id)
             if mkt is None:
                 continue
-            # True LTV after price drift (oracle still reports old price)
-            true_oracle = int(mkt.oracle_price_36dec * (1 + self.drift_pct))
-            if true_oracle <= 0:
-                true_oracle = 1
+            # True LTV at the shocked price (oracle still reports old price)
+            true_oracle = max(1, int(mkt.oracle_price_36dec * (1 + self.drift_pct)))
             true_ltv = pos.ltv(true_oracle)
-            # Liquidation threshold (LLTV + incentive cushion)
-            liq_threshold = mkt.lltv * (1 + self.liquidation_incentive)
             total_debt += pos.debt_assets
-            if true_ltv > liq_threshold:
-                unhealthy_debt += pos.debt_assets
-                unliquidatable_count += 1
+            if true_ltv > bad_debt_ltv:
+                bad_debt += pos.debt_assets
+                bad_debt_positions += 1
                 bucket = per_market.setdefault(
                     pos.market_id,
-                    {"unhealthy_debt": 0, "count": 0},
+                    {"bad_debt_assets": 0, "count": 0},
                 )
-                bucket["unhealthy_debt"] += pos.debt_assets
+                bucket["bad_debt_assets"] += pos.debt_assets
                 bucket["count"] += 1
 
-        fraction = (unhealthy_debt / total_debt) if total_debt > 0 else 0.0
+        fraction = (bad_debt / total_debt) if total_debt > 0 else 0.0
+        pos_word = "position" if bad_debt_positions == 1 else "positions"
         return DetectorResult(
             name="OracleFreezeReplay",
             headline_metric=fraction,
             headline_unit="fraction_bad_debt",
             interpretation=(
-                f"If oracle freezes while collateral drifts {self.drift_pct:+.0%}, "
-                f"{fraction:.1%} of outstanding debt ({unliquidatable_count} positions) "
-                f"would breach liquidation threshold but remain unliquidatable until "
-                f"oracle updates."
+                f"If the oracle freezes while collateral drifts {self.drift_pct:+.0%}, "
+                f"{fraction:.1%} of outstanding debt ({bad_debt_positions} {pos_word}) "
+                f"crosses the bad-debt frontier — LTV > {bad_debt_ltv:.3f} at "
+                f"LIF {self.bad_debt_lif:.0%} — meaning seized collateral could not "
+                f"cover debt-plus-incentive even once the oracle updates."
             ),
             evidence={
                 "drift_pct": self.drift_pct,
-                "liquidation_incentive": self.liquidation_incentive,
-                "unhealthy_debt_assets": unhealthy_debt,
+                "bad_debt_lif": self.bad_debt_lif,
+                "bad_debt_frontier_ltv": bad_debt_ltv,
+                "bad_debt_assets": bad_debt,
                 "total_debt_assets": total_debt,
-                "unliquidatable_positions": unliquidatable_count,
+                "bad_debt_positions": bad_debt_positions,
                 "per_market": per_market,
             },
         )
@@ -289,13 +304,22 @@ class UtilizationInversion:
 
 
 class LiquidationLatency:
-    """Estimate the latency window between an oracle update that pushes a
-    position underwater and the first profitable liquidation, given gas
-    economics and minimum-profit thresholds.
+    """Estimate the fraction of debt sitting in positions too small to be
+    profitably liquidated at the current gas price.
 
-    Returns: estimated fraction of debt where post-gas profit is *negative*
-    for a liquidator at the assumed gas price — meaning the position sits
-    underwater longer than ideal and accrues bad debt risk.
+    A liquidator's profit per call is `debt × LIF × loan_price_usd` and
+    cost is `gas_price × gas_used × eth_price_usd`. Below the breakeven,
+    positions linger underwater and accrue bad-debt risk during oracle
+    update lags.
+
+    Args:
+      gas_price_gwei: assumed gas price in gwei.
+      liquidation_gas: gas units per liquidation call (Morpho Blue ~350k).
+      eth_price_usd: ETH price for the gas-cost USD conversion.
+      lif: Liquidation Incentive Factor — bonus paid to liquidator.
+      loan_decimals: decimals of the vault's loan asset. Default 6 (USDC).
+      loan_price_usd: USD price of the loan asset. Default 1.0 (stablecoin
+        vaults). Override for WETH-/DAI-denominated vaults.
     """
 
     def __init__(
@@ -303,32 +327,43 @@ class LiquidationLatency:
         gas_price_gwei: float = 30.0,
         liquidation_gas: int = 350_000,
         eth_price_usd: float = 3500.0,
+        lif: float = 0.05,
+        loan_decimals: int = 6,
+        loan_price_usd: float = 1.0,
     ):
+        if gas_price_gwei <= 0:
+            raise ValueError(f"gas_price_gwei must be > 0, got {gas_price_gwei}")
+        if not 0.0 < lif < 1.0:
+            raise ValueError(f"lif must be in (0,1), got {lif}")
+        if loan_decimals < 0:
+            raise ValueError(f"loan_decimals must be >= 0, got {loan_decimals}")
         self.gas_price_gwei = gas_price_gwei
         self.liquidation_gas = liquidation_gas
         self.eth_price_usd = eth_price_usd
+        self.lif = lif
+        self.loan_decimals = loan_decimals
+        self.loan_price_usd = loan_price_usd
 
     def _liquidation_cost_usd(self) -> float:
         return self.gas_price_gwei * 1e-9 * self.liquidation_gas * self.eth_price_usd
 
     def run(self, snapshot: VaultSnapshot) -> DetectorResult:
         cost_usd = self._liquidation_cost_usd()
-        # For each borrower, profitable liquidation = debt * liquidation_incentive (5%)
-        # We approximate debt in USD by treating loan-asset units 1:1 USD
-        # (true for USDC/DAI-loan vaults; documented assumption for the demo).
+        loan_unit = 10**self.loan_decimals
+
         unprofitable_count = 0
         unprofitable_debt = 0
         total_debt = 0
         for pos in snapshot.borrowers:
             total_debt += pos.debt_assets
-            # Convert assuming USDC 6-decimal as the demo case
-            debt_usd = pos.debt_assets / 1e6
-            profit_usd = debt_usd * 0.05
+            debt_usd = pos.debt_assets / loan_unit * self.loan_price_usd
+            profit_usd = debt_usd * self.lif
             if profit_usd < cost_usd:
                 unprofitable_count += 1
                 unprofitable_debt += pos.debt_assets
 
         fraction = (unprofitable_debt / total_debt) if total_debt > 0 else 0.0
+        pos_word = "position" if unprofitable_count == 1 else "positions"
         return DetectorResult(
             name="LiquidationLatency",
             headline_metric=fraction,
@@ -336,13 +371,16 @@ class LiquidationLatency:
             interpretation=(
                 f"At {self.gas_price_gwei:.0f} gwei and ETH ${self.eth_price_usd:.0f}, "
                 f"liquidation cost is ~${cost_usd:.2f}; "
-                f"{fraction:.1%} of debt sits in positions where liquidation profit < cost "
-                f"({unprofitable_count} small positions) — these accrue bad-debt risk "
-                f"during oracle-shock windows."
+                f"{fraction:.1%} of debt sits in {unprofitable_count} {pos_word} where "
+                f"liquidator profit (debt × {self.lif:.0%}) is below cost — these accrue "
+                f"bad-debt risk during oracle-shock windows."
             ),
             evidence={
                 "gas_price_gwei": self.gas_price_gwei,
                 "eth_price_usd": self.eth_price_usd,
+                "lif": self.lif,
+                "loan_decimals": self.loan_decimals,
+                "loan_price_usd": self.loan_price_usd,
                 "cost_per_liquidation_usd": cost_usd,
                 "unprofitable_positions": unprofitable_count,
                 "unprofitable_debt_assets": unprofitable_debt,
@@ -382,9 +420,15 @@ class LTVDistributionStress:
             return DetectorResult(
                 name="LTVDistributionStress",
                 headline_metric=0.0,
-                headline_unit="fraction_near_lltv",
-                interpretation="No borrower positions to analyze.",
-                evidence={},
+                headline_unit="fraction_debt_within_5pp_of_lltv",
+                interpretation=(
+                    "No borrower positions in the snapshot — LTV distribution "
+                    "is undefined. (Live MetaMorpho fetches via the public Blue "
+                    "API do not currently include individual borrower positions; "
+                    "this detector reads zero on live snapshots until a subgraph "
+                    "fetch is wired in.)"
+                ),
+                evidence={"n_positions": 0},
             )
 
         ltvs_sorted = sorted(ltvs, reverse=True)

@@ -5,12 +5,11 @@ type: software
 authors:
   - given-names: Max
     family-names: Gorbuk
-    orcid: ""
-    affiliation: "Stanford GSB Venture Capital Initiative (Researcher)"
+    affiliation: "Stanford GSB Venture Capital Initiative"
 repository-code: "https://github.com/mkzung/morpho-vault-counterfactuals"
 url: "https://mkzung.github.io/morpho-vault-counterfactuals/"
 license: MIT
-version: "0.2.0"
+version: "0.4.0"
 date-released: "2026-05-16"
 keywords:
   - defi
