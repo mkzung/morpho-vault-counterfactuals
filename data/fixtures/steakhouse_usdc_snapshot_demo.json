@@ -1,0 +1,94 @@
+{
+  "_comment": "Synthetic snapshot styled after the Steakhouse USDC MetaMorpho vault on mainnet (vault address 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB). Block and amounts are ILLUSTRATIVE — used for reproducible offline testing and notebook demo. Oracle prices follow Morpho's convention: price = real_price * 10^(36 + loan_decimals - collateral_decimals). USDC has 6 decimals. For live snapshots, see notebooks/01_live_fetch_demo.ipynb. Real Steakhouse USDC vault on mainnet exceeds $500M TVL as of mid-2025; numbers here are scaled down.",
+  "vault_address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+  "block": 19500000,
+  "timestamp": 1716000000,
+  "total_assets": 250000000000000,
+  "total_shares": 245000000000000,
+  "top_depositors": [
+    ["0x1111111111111111111111111111111111111111", 49000000000000],
+    ["0x2222222222222222222222222222222222222222", 25000000000000],
+    ["0x3333333333333333333333333333333333333333", 12000000000000],
+    ["0x4444444444444444444444444444444444444444", 8000000000000],
+    ["0x5555555555555555555555555555555555555555", 6000000000000]
+  ],
+  "markets": [
+    {
+      "market_id": "0xa921ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99",
+      "block": 19500000,
+      "timestamp": 1716000000,
+      "collateral_token": "0x83F20F44975D03b1b09e64809B757c47f942BEeA",
+      "loan_token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "total_supply_assets": 80000000000000,
+      "total_borrow_assets": 65000000000000,
+      "total_collateral_assets": 75000000000000000000000,
+      "oracle_price_36dec": 1050000000000000000000000,
+      "lltv_wad": 945000000000000000,
+      "supply_cap": 100000000000000
+    },
+    {
+      "market_id": "0xb1adceddb2941033a02dd81f49cbf063f33fd7d6e1da8a1b0d72f51b53b04ed1",
+      "block": 19500000,
+      "timestamp": 1716000000,
+      "collateral_token": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "loan_token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "total_supply_assets": 60000000000000,
+      "total_borrow_assets": 52000000000000,
+      "total_collateral_assets": 1850000000,
+      "oracle_price_36dec": 700000000000000000000000000000000000000000,
+      "lltv_wad": 860000000000000000,
+      "supply_cap": 80000000000000
+    },
+    {
+      "market_id": "0xc2bdef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99",
+      "block": 19500000,
+      "timestamp": 1716000000,
+      "collateral_token": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "loan_token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "total_supply_assets": 50000000000000,
+      "total_borrow_assets": 31000000000000,
+      "total_collateral_assets": 18500000000000000000000,
+      "oracle_price_36dec": 3300000000000000000000000000,
+      "lltv_wad": 860000000000000000,
+      "supply_cap": 70000000000000
+    },
+    {
+      "market_id": "0xd3cef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99a",
+      "block": 19500000,
+      "timestamp": 1716000000,
+      "collateral_token": "0xae78736Cd615f374D3085123A210448E74Fc6393",
+      "loan_token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "total_supply_assets": 30000000000000,
+      "total_borrow_assets": 15500000000000,
+      "total_collateral_assets": 4200000000000000000000,
+      "oracle_price_36dec": 3700000000000000000000000000,
+      "lltv_wad": 770000000000000000,
+      "supply_cap": 35000000000000
+    },
+    {
+      "market_id": "0xe4def34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99b",
+      "block": 19500000,
+      "timestamp": 1716000000,
+      "collateral_token": "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+      "loan_token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "total_supply_assets": 30000000000000,
+      "total_borrow_assets": 29400000000000,
+      "total_collateral_assets": 3600000000000000000000,
+      "oracle_price_36dec": 3950000000000000000000000000,
+      "lltv_wad": 770000000000000000,
+      "supply_cap": 32000000000000
+    }
+  ],
+  "borrowers": [
+    {"market_id": "0xa921ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99", "borrower": "0xaaaa1111111111111111111111111111111111aa", "collateral": 30000000000000000000000, "debt_assets": 28500000000},
+    {"market_id": "0xa921ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99", "borrower": "0xaaaa2222222222222222222222222222222222aa", "collateral": 12000000000000000000000, "debt_assets": 11700000000},
+    {"market_id": "0xa921ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99", "borrower": "0xaaaa3333333333333333333333333333333333aa", "collateral": 500000000000000000000, "debt_assets": 470000000},
+    {"market_id": "0xb1adceddb2941033a02dd81f49cbf063f33fd7d6e1da8a1b0d72f51b53b04ed1", "borrower": "0xbbbb1111111111111111111111111111111111bb", "collateral": 100000000, "debt_assets": 28000000000},
+    {"market_id": "0xb1adceddb2941033a02dd81f49cbf063f33fd7d6e1da8a1b0d72f51b53b04ed1", "borrower": "0xbbbb2222222222222222222222222222222222bb", "collateral": 50000000, "debt_assets": 14500000000},
+    {"market_id": "0xc2bdef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99", "borrower": "0xcccc1111111111111111111111111111111111cc", "collateral": 10000000000000000000, "debt_assets": 25000000000},
+    {"market_id": "0xc2bdef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99", "borrower": "0xcccc2222222222222222222222222222222222cc", "collateral": 2500000000000000000, "debt_assets": 7000000000},
+    {"market_id": "0xd3cef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99a", "borrower": "0xdddd1111111111111111111111111111111111dd", "collateral": 5000000000000000000, "debt_assets": 14000000000},
+    {"market_id": "0xe4def34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99b", "borrower": "0xeeee1111111111111111111111111111111111ee", "collateral": 7500000000000000000, "debt_assets": 28000000000},
+    {"market_id": "0xa921ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4df99", "borrower": "0xaaaa4444444444444444444444444444444444aa", "collateral": 10000000000000000, "debt_assets": 9000}
+  ]
+}

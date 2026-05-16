@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "morpho-vault-counterfactuals"
+version = "0.1.0"
+description = "Historical replay + counterfactual stress testing for Morpho MetaMorpho vaults."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Maxim Gorbuk" }]
+requires-python = ">=3.10"
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.24",
+  "pydantic>=2.5",
+  "httpx>=0.27",
+  "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "ruff>=0.6",
+  "mypy>=1.8",
+  "jupyter>=1.0",
+  "matplotlib>=3.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/mkzung/morpho-vault-counterfactuals"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mvcf"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
