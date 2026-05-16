@@ -28,6 +28,9 @@ dev = [
   "matplotlib>=3.8",
 ]
 
+[project.scripts]
+mvcf = "mvcf.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/mkzung/morpho-vault-counterfactuals"
 

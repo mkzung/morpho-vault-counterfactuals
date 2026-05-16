@@ -35,7 +35,7 @@
       "total_supply_assets": 60000000000000,
       "total_borrow_assets": 52000000000000,
       "total_collateral_assets": 1850000000,
-      "oracle_price_36dec": 700000000000000000000000000000000000000000,
+      "oracle_price_36dec": 700000000000000000000000000000000000000,
       "lltv_wad": 860000000000000000,
       "supply_cap": 80000000000000
     },

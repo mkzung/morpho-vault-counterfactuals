@@ -1,0 +1,33 @@
+{
+  "_comment": "Edge-case fixture — a small distressed vault with a single market, three borrowers, top-1 depositor at >50%, utilization >95%. Used to verify detectors handle the corner cases curators actually call alerting on (concentrated depositor, hot utilization, multiple positions at LLTV).",
+  "vault_address": "0xDEAD000000000000000000000000000000000001",
+  "block": 19500001,
+  "timestamp": 1716000060,
+  "total_assets": 5000000000000,
+  "total_shares": 5000000000000,
+  "top_depositors": [
+    ["0xaaaa000000000000000000000000000000000001", 3000000000000],
+    ["0xaaaa000000000000000000000000000000000002", 1000000000000],
+    ["0xaaaa000000000000000000000000000000000003", 600000000000]
+  ],
+  "markets": [
+    {
+      "market_id": "0x0000ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4dead",
+      "block": 19500001,
+      "timestamp": 1716000060,
+      "collateral_token": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "loan_token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "total_supply_assets": 5000000000000,
+      "total_borrow_assets": 4900000000000,
+      "total_collateral_assets": 1700000000000000000000,
+      "oracle_price_36dec": 3300000000000000000000000000,
+      "lltv_wad": 860000000000000000,
+      "supply_cap": 5000000000000
+    }
+  ],
+  "borrowers": [
+    {"market_id": "0x0000ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4dead", "borrower": "0xbbbb000000000000000000000000000000000001", "collateral": 1000000000000000000, "debt_assets": 2820000000},
+    {"market_id": "0x0000ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4dead", "borrower": "0xbbbb000000000000000000000000000000000002", "collateral": 500000000000000000, "debt_assets": 1380000000},
+    {"market_id": "0x0000ef34e2fc7a27ccc50ae7e4b154e16c9799d3387076c421423ef52ac4dead", "borrower": "0xbbbb000000000000000000000000000000000003", "collateral": 200000000000000000, "debt_assets": 700000}
+  ]
+}

@@ -48,8 +48,23 @@ pytest tests/                                          # ~1s, no RPC required
 jupyter notebook notebooks/01_demo.ipynb               # walk through detectors
 ```
 
+### CLI
+
+`pip install -e .` installs an `mvcf` console script:
+
+```bash
+mvcf analyze --fixture steakhouse_usdc_snapshot_demo                       # text summary
+mvcf analyze --fixture steakhouse_usdc_snapshot_demo --format markdown     # curator brief
+mvcf analyze --fixture steakhouse_usdc_snapshot_demo --format json         # for piping
+mvcf analyze --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB            # live fetch
+mvcf sweep collateral --fixture steakhouse_usdc_snapshot_demo \
+        --shocks=-0.05,-0.10,-0.20,-0.30,-0.50                             # sensitivity sweep
+```
+
+### Python API
+
 ```python
-from mvcf import load_fixture, run_all_detectors, summarize
+from mvcf import load_fixture, run_all_detectors, summarize, as_markdown
 snap = load_fixture("steakhouse_usdc_snapshot_demo")
 results = run_all_detectors(
     snap,
@@ -59,7 +74,8 @@ results = run_all_detectors(
     util_band=0.92,              # utilization above this triggers a flag
     gas_gwei=30,                 # current gas-price assumption for liq cost
 )
-print(summarize(results))
+print(summarize(results))                              # human-readable text
+brief = as_markdown(snap, results)                     # paste-ready curator brief
 ```
 
 Sample output:
