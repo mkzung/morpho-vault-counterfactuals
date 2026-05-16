@@ -3,7 +3,7 @@ title: "morpho-vault-counterfactuals: counterfactual risk monitoring for Morpho 
 message: "If you use this software in research or curator tooling, please cite as below."
 type: software
 authors:
-  - given-names: Maxim
+  - given-names: Max
     family-names: Gorbuk
     orcid: ""
     affiliation: "Stanford GSB Venture Capital Initiative (Researcher)"
