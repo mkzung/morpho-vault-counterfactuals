@@ -62,4 +62,4 @@ jobs:
       - name: CLI markdown format
         run: mvcf analyze --fixture steakhouse_usdc_snapshot_demo --format markdown
       - name: CLI sweep
-        run: mvcf sweep collateral --fixture steakhouse_usdc_snapshot_demo --shocks "-0.05,-0.20,-0.50"
+        run: mvcf sweep collateral --fixture steakhouse_usdc_snapshot_demo --shocks=-0.05,-0.20,-0.50
