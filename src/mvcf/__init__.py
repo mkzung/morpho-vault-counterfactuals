@@ -8,6 +8,7 @@ from .detectors import (
     OracleFreezeReplay,
     UtilizationInversion,
 )
+from .diff import VaultDiff, diff_snapshots, summarize_diff
 from .fetch import fetch_vault_snapshot, load_fixture, load_history
 from .html_report import as_html
 from .report import as_json, as_markdown
@@ -27,9 +28,12 @@ __all__ = [
     "UtilizationInversion",
     "VaultHistory",
     "VaultSnapshot",
+    "VaultDiff",
     "as_html",
     "as_json",
     "as_markdown",
+    "diff_snapshots",
+    "summarize_diff",
     "fetch_vault_snapshot",
     "load_fixture",
     "load_history",

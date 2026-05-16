@@ -24,6 +24,7 @@ import sys
 from collections.abc import Sequence
 
 from .detectors import CollateralCascade, OracleFreezeReplay
+from .diff import diff_snapshots, summarize_diff
 from .fetch import fetch_vault_snapshot, load_fixture
 from .html_report import as_html
 from .report import as_json, as_markdown
@@ -146,6 +147,15 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_diff(args: argparse.Namespace) -> int:
+    """Week-over-week diff of two fixture snapshots."""
+    old = load_fixture(args.old)
+    new = load_fixture(args.new)
+    diff = diff_snapshots(old, new)
+    print(summarize_diff(diff))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="mvcf",
@@ -188,6 +198,12 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--vaults", help="Comma-separated vault addresses (live fetch)")
     c.add_argument("--block", type=int, default=None)
     c.set_defaults(func=_cmd_compare)
+
+    # diff
+    d = sub.add_parser("diff", help="Week-over-week diff between two fixture snapshots")
+    d.add_argument("old", help="Name of the older fixture")
+    d.add_argument("new", help="Name of the newer fixture")
+    d.set_defaults(func=_cmd_diff)
 
     return p
 

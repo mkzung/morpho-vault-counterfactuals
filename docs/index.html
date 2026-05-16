@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>morpho-vault-counterfactuals — demo reports</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+         max-width: 820px; margin: 60px auto; padding: 0 24px; color: #0f172a;
+         background: #fafafa; line-height: 1.55; }
+  h1 { margin: 0 0 6px; font-size: 26px; }
+  .sub { color: #64748b; margin-bottom: 32px; }
+  .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+          padding: 24px; margin-bottom: 16px; }
+  .card h2 { margin: 0 0 6px; font-size: 18px; }
+  .card p { color: #475569; margin: 4px 0 14px; }
+  .btn { display: inline-block; padding: 10px 18px; border-radius: 8px;
+         background: #1d4ed8; color: white; text-decoration: none; font-weight: 600;
+         font-size: 14px; }
+  .btn:hover { background: #1e40af; }
+  .alt { background: #475569; }
+  .meta { color: #64748b; font-size: 12px; margin-top: 6px; }
+  footer { text-align: center; color: #94a3b8; font-size: 12px; margin-top: 40px; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<h1>morpho-vault-counterfactuals</h1>
+<div class="sub">Demo HTML reports — pre-rendered from the project's offline fixtures.</div>
+
+<div class="card">
+  <h2>🏛 Steakhouse-USDC-style demo vault</h2>
+  <p>5 markets, 10 borrowers, healthy-ish profile. Demonstrates the framework's
+     output at default parameters (oracle drift −10%, collateral shock −20%,
+     utilization band 92%, gas 30 gwei).</p>
+  <a class="btn" href="./demo_report.html">View report →</a>
+  <div class="meta">block 19,500,000 · synthetic illustration of real vault</div>
+</div>
+
+<div class="card">
+  <h2>🔥 Distressed single-market vault</h2>
+  <p>Edge case: one market, top-1 depositor &gt; 60%, utilization &gt; 95%,
+     borrowers within 1pp of LLTV. All six detectors trip CRITICAL.</p>
+  <a class="btn alt" href="./demo_report_distressed.html">View report →</a>
+  <div class="meta">block 19,500,001 · synthetic worst-case fixture</div>
+</div>
+
+<div class="card">
+  <h2>📂 Project repository</h2>
+  <p>Source code, the six counterfactual detectors, 50+ tests, Streamlit
+     dashboard, multi-format CLI (text / json / markdown / html), and the
+     full design rationale.</p>
+  <a class="btn" href="https://github.com/mkzung/morpho-vault-counterfactuals">GitHub →</a>
+</div>
+
+<footer>
+  © 2026 Maxim Gorbuk · MIT License · <a href="https://github.com/mkzung/morpho-vault-counterfactuals">source on GitHub</a>
+</footer>
+
+</body>
+</html>

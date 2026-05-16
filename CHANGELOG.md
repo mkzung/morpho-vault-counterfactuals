@@ -6,6 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `mvcf diff old.json new.json` — week-over-week snapshot delta with biggest-mover ranking.
+- `src/mvcf/synthetic.py` — deterministic synthetic-vault generator for performance and scaling tests.
+- `streamlit_app.py` — interactive Streamlit dashboard with live parameter sweeping.
+- `docs/index.html` — landing page for GitHub Pages auto-deploy.
+- `.github/workflows/pages.yml` — auto-deploys `docs/` to GitHub Pages on every push to main.
+- `.github/ISSUE_TEMPLATE/` (bug + feature) and `PULL_REQUEST_TEMPLATE.md`.
+- Performance smoke test: 1000-borrower × 10-market synthetic vault must complete all six detectors in &lt; 1 second.
+
 ## [0.1.0] — 2026-05-16
 
 ### Added
