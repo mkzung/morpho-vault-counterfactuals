@@ -1,0 +1,59 @@
+name: Live snapshot (nightly)
+
+# Pulls the current Steakhouse USDC vault state from the public Morpho Blue API
+# and commits a fresh HTML + JSON report under `live-data/`. Produces a public
+# time-series of curator metrics for one of the largest MetaMorpho vaults.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # ~06:17 UTC daily — off-peak for the public API
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Fetch Steakhouse USDC + render reports
+        env:
+          MORPHO_API_KEY: ${{ secrets.MORPHO_API_KEY }}
+        run: |
+          mkdir -p live-data
+          mvcf analyze \
+            --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB \
+            --format json --output live-data/steakhouse_usdc_latest.json
+          mvcf analyze \
+            --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB \
+            --format html --output live-data/steakhouse_usdc_latest.html
+          mvcf analyze \
+            --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB \
+            --format markdown --output live-data/steakhouse_usdc_latest.md
+
+      - name: Archive timestamped copy
+        run: |
+          TS=$(date -u +"%Y-%m-%d")
+          mkdir -p live-data/history
+          cp live-data/steakhouse_usdc_latest.json "live-data/history/${TS}.json"
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add live-data/
+          if git diff --staged --quiet; then
+            echo "  No change in live snapshot — skipping commit."
+          else
+            git commit -m "live-data: nightly Steakhouse USDC snapshot $(date -u +%Y-%m-%d)"
+            git push
+          fi

@@ -1,0 +1,83 @@
+{
+  "vault_address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+  "block": 0,
+  "timestamp": 0,
+  "total_assets_loan_units": 126018297727329,
+  "hhi": 0.0,
+  "top1_share": 0.0,
+  "n_markets": 7,
+  "n_borrowers": 0,
+  "detectors": [
+    {
+      "name": "OracleFreezeReplay",
+      "headline_metric": 0.0,
+      "headline_unit": "fraction_bad_debt",
+      "interpretation": "If oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 positions) would breach liquidation threshold but remain unliquidatable until oracle updates.",
+      "evidence": {
+        "drift_pct": -0.1,
+        "liquidation_incentive": 0.05,
+        "unhealthy_debt_assets": 0,
+        "total_debt_assets": 0,
+        "unliquidatable_positions": 0,
+        "per_market": {}
+      }
+    },
+    {
+      "name": "CollateralCascade",
+      "headline_metric": 0.0,
+      "headline_unit": "fraction_liquidatable_debt",
+      "interpretation": "At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 0 loan-asset units across affected markets.",
+      "evidence": {
+        "shock_pct": -0.2,
+        "liquidatable_debt_assets": 0,
+        "total_debt_assets": 0,
+        "liquidity_gap": 0,
+        "per_market": {}
+      }
+    },
+    {
+      "name": "DepositorExitShock",
+      "headline_metric": 0.0,
+      "headline_unit": "fraction_rationed",
+      "interpretation": "If top-1 depositor(s) exit, demand is 0 vs idle supply 46,723,706,602,862 \u2192 0.0% would be queue-rationed until borrowers repay.",
+      "evidence": {
+        "top_n": 1,
+        "exit_demand_loan_assets": 0,
+        "idle_supply_loan_assets": 46723706602862,
+        "rationing_gap": 0,
+        "hhi": 0.0
+      }
+    },
+    {
+      "name": "UtilizationInversion",
+      "headline_metric": 0.0,
+      "headline_unit": "fraction_markets_above_target",
+      "interpretation": "0 / 7 markets are above the 92% utilization band \u2014 IRM curves enter the steep regime; depositor withdrawal pressure compounds.",
+      "evidence": {
+        "target_util_max": 0.92,
+        "breached_markets": []
+      }
+    },
+    {
+      "name": "LiquidationLatency",
+      "headline_metric": 0.0,
+      "headline_unit": "fraction_unprofitable_to_liquidate",
+      "interpretation": "At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in positions where liquidation profit < cost (0 small positions) \u2014 these accrue bad-debt risk during oracle-shock windows.",
+      "evidence": {
+        "gas_price_gwei": 30.0,
+        "eth_price_usd": 3500.0,
+        "cost_per_liquidation_usd": 36.75,
+        "unprofitable_positions": 0,
+        "unprofitable_debt_assets": 0,
+        "total_debt_assets": 0
+      }
+    },
+    {
+      "name": "LTVDistributionStress",
+      "headline_metric": 0.0,
+      "headline_unit": "fraction_near_lltv",
+      "interpretation": "No borrower positions to analyze.",
+      "evidence": {}
+    }
+  ]
+}

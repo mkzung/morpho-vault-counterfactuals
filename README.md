@@ -13,7 +13,9 @@ A Python framework that asks: *"if oracle X had frozen at block T, or if the top
 
 This is curator-side counterfactual reasoning, the kind of question a Morpho curator (Re7 Labs, Steakhouse, MEV Capital, Block Analitica) needs to answer before they raise an LLTV, increase a supply cap, or admit a new market into a managed vault.
 
-🔍 **Live demo (no clone needed):** [**mkzung.github.io/morpho-vault-counterfactuals**](https://mkzung.github.io/morpho-vault-counterfactuals/) — pre-rendered HTML dashboards on Steakhouse-USDC-style and distressed-vault fixtures.
+🔍 **Live demo (no clone needed):** [**mkzung.github.io/morpho-vault-counterfactuals**](https://mkzung.github.io/morpho-vault-counterfactuals/) — pre-rendered HTML dashboards on demo fixtures.
+
+📡 **Live mainnet data:** [`live-data/`](./live-data/) — a nightly GitHub Actions cron fetches the current state of the real [Steakhouse USDC vault](https://etherscan.io/address/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB) (>$120M TVL on Ethereum mainnet) and commits a fresh HTML/JSON/Markdown report. The repo doubles as a public time-series of curator metrics for one of Morpho's flagship vaults.
 
 🎛 **Interactive Streamlit dashboard:** `streamlit run streamlit_app.py` after `pip install streamlit`.
 

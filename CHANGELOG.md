@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- **Nightly live-snapshot workflow** — daily GitHub Actions cron fetches Steakhouse USDC (>$120M TVL mainnet vault) and commits fresh HTML/JSON/Markdown reports + a timestamped JSON archive under `live-data/history/`.
+- **PyPI publish workflow** — fires on `v*.*.*` tag push; uses Trusted Publishing (no API tokens).
+- **CITATION.cff** — academic-style citation file (CFF 1.2 standard).
+- **`fetch.py` hardening** — gracefully skips idle markets (null collateralAsset) and degenerate LLTV values when parsing live Morpho Blue API responses. Verified end-to-end against the live Steakhouse USDC vault.
 - `mvcf diff old.json new.json` — week-over-week snapshot delta with biggest-mover ranking.
 - `src/mvcf/synthetic.py` — deterministic synthetic-vault generator for performance and scaling tests.
 - `streamlit_app.py` — interactive Streamlit dashboard with live parameter sweeping.

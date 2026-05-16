@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+title: "morpho-vault-counterfactuals: counterfactual risk monitoring for Morpho MetaMorpho vaults"
+message: "If you use this software in research or curator tooling, please cite as below."
+type: software
+authors:
+  - given-names: Maxim
+    family-names: Gorbuk
+    orcid: ""
+    affiliation: "Stanford GSB Venture Capital Initiative (research affiliate)"
+repository-code: "https://github.com/mkzung/morpho-vault-counterfactuals"
+url: "https://mkzung.github.io/morpho-vault-counterfactuals/"
+license: MIT
+version: "0.2.0"
+date-released: "2026-05-16"
+keywords:
+  - defi
+  - morpho
+  - metamorpho
+  - risk-management
+  - lending
+  - counterfactual-analysis
+  - stress-testing
+  - python
+abstract: >-
+  A Python framework that runs six counterfactual stress-test detectors
+  against Morpho MetaMorpho vault snapshots — oracle freeze replay,
+  collateral cascade, top-depositor exit shock, utilization inversion,
+  liquidation latency, and LTV distribution stress. Designed as the
+  curator-side counterfactual complement to the official
+  @morpho-org/vault-risk-sdk (which measures current risk).

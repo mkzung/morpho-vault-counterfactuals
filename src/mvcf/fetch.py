@@ -111,7 +111,16 @@ def _parse_response(payload: dict, vault_address: str, block: int) -> VaultSnaps
         mkt = alloc.get("market")
         if not mkt:
             continue
+        # Idle markets have null collateralAsset (vault holds the loan asset
+        # unallocated). Skip — there's nothing to risk-analyze on a position
+        # that has no collateral to liquidate.
+        if not mkt.get("collateralAsset") or not mkt.get("loanAsset"):
+            continue
         mkt_state = mkt.get("state") or {}
+        # LLTV must be strictly < 1e18; skip markets with degenerate metadata.
+        lltv = int(mkt.get("lltv", 0) or 0)
+        if not (0 < lltv < 10**18):
+            continue
         markets.append(
             MarketState(
                 market_id=mkt["uniqueKey"],
@@ -119,11 +128,11 @@ def _parse_response(payload: dict, vault_address: str, block: int) -> VaultSnaps
                 timestamp=0,  # the Blue API doesn't always return ts; pin later
                 collateral_token=mkt["collateralAsset"]["address"],
                 loan_token=mkt["loanAsset"]["address"],
-                total_supply_assets=int(mkt_state.get("supplyAssets", 0)),
-                total_borrow_assets=int(mkt_state.get("borrowAssets", 0)),
-                total_collateral_assets=int(mkt_state.get("collateralAssets", 0)),
-                oracle_price_36dec=int(mkt_state.get("price", 0)) or 1,
-                lltv_wad=int(mkt["lltv"]),
+                total_supply_assets=int(mkt_state.get("supplyAssets", 0) or 0),
+                total_borrow_assets=int(mkt_state.get("borrowAssets", 0) or 0),
+                total_collateral_assets=int(mkt_state.get("collateralAssets", 0) or 0),
+                oracle_price_36dec=int(mkt_state.get("price", 0) or 0) or 1,
+                lltv_wad=lltv,
                 supply_cap=int(alloc.get("supplyCap") or 0),
             )
         )
