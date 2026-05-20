@@ -1,7 +1,7 @@
 # Vault risk brief — `0xBEEF…64CB`
 
 - **Block:** 0
-- **Total assets (loan-asset units):** `124,774,852,957,530`
+- **Total assets (loan-asset units):** `114,619,526,669,133`
 - **Markets:** 8
 - **Borrowers analyzed:** 0
 - **HHI (depositor concentration):** `0.000` (top-1 = 0.0%)
@@ -59,7 +59,7 @@ At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (de
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 0 vs idle supply 50,941,970,285,869 → 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 0 vs idle supply 59,046,957,887,353 → 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
@@ -67,7 +67,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 50,941,970,285,869 → 0.
 {
   "top_n": 1,
   "exit_demand_loan_assets": 0,
-  "idle_supply_loan_assets": 50941970285869,
+  "idle_supply_loan_assets": 59046957887353,
   "rationing_gap": 0,
   "hhi": 0.0
 }
