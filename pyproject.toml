@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "morpho-vault-counterfactuals"
-version = "0.4.0"
+version = "0.5.0"
 description = "Historical replay + counterfactual stress testing for Morpho MetaMorpho vaults."
 readme = "README.md"
 license = { text = "MIT" }

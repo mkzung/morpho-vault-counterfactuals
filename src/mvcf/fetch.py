@@ -9,9 +9,13 @@ USAGE NOTE (read before running against mainnet):
     callers. For production use, set MORPHO_API_KEY in the environment.
   - The Subgraph URL is the upstream-blessed Morpho Blue endpoint; mirror
     it to a private indexer (Goldsky, Subsquid) for >100 req/min loads.
-  - Block-pinning: we always query with a specific `block` to ensure
-    reproducibility — a curator's monitor that queries "latest" is
-    non-deterministic between runs.
+  - Block-pinning: the Morpho Blue `vaultByAddress` GraphQL endpoint does
+    NOT accept a block argument — it always returns the latest indexed
+    state. The `block` parameter on `fetch_vault_snapshot` is metadata
+    only (stamped into the returned `VaultSnapshot.block` for audit
+    purposes) and does not pin the query. For true block-pinning, query
+    a private archival indexer (Goldsky / Subsquid / your own subgraph).
+    Fixture-based replay (`load_fixture`) IS block-pinned bit-for-bit.
 
 Author note: This file is the I/O frontier. All on-chain plumbing lives
 here so the detectors stay pure functions on `VaultSnapshot`.
@@ -21,6 +25,8 @@ from __future__ import annotations
 
 import json
 import os
+import time
+import warnings
 from pathlib import Path
 
 import httpx
@@ -40,14 +46,19 @@ def fetch_vault_snapshot(
 
     Args:
         vault_address: 0x-prefixed EOA-style address.
-        block: optional block number to pin the query. If None, fetches latest.
+        block: optional block number, stamped into the returned snapshot's
+            metadata for audit purposes. NOTE: the Morpho Blue GraphQL
+            endpoint does not accept a block argument, so this does not
+            pin the query — see module docstring for the honest story.
         timeout: request timeout in seconds.
 
     Returns:
         Validated `VaultSnapshot`.
 
     Raises:
-        httpx.HTTPError on network failures.
+        httpx.HTTPError on network failures (after retries exhausted).
+        ValueError if the GraphQL response contains an `errors` array or
+            the vault is missing.
         pydantic.ValidationError if Morpho returns unexpected shapes.
     """
     query = """
@@ -85,13 +96,46 @@ def fetch_vault_snapshot(
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
 
+    # Retry on 429 / 5xx with exponential backoff (1s, 2s, 4s). httpx has no
+    # built-in retry policy on POST, so we hand-roll it; keep it bounded so a
+    # curator's nightly cron fails loudly rather than hanging for minutes.
+    backoffs = [1.0, 2.0, 4.0]
+    last_exc: Exception | None = None
     with httpx.Client(timeout=timeout, headers=headers) as client:
-        resp = client.post(
-            MORPHO_API_BASE,
-            json={"query": query, "variables": variables},
+        for attempt, sleep_s in enumerate([0.0] + backoffs):
+            if sleep_s > 0:
+                time.sleep(sleep_s)
+            try:
+                resp = client.post(
+                    MORPHO_API_BASE,
+                    json={"query": query, "variables": variables},
+                )
+                if resp.status_code in (429,) or 500 <= resp.status_code < 600:
+                    last_exc = httpx.HTTPStatusError(
+                        f"Morpho API returned {resp.status_code} "
+                        f"(attempt {attempt + 1}/{len(backoffs) + 1})",
+                        request=resp.request,
+                        response=resp,
+                    )
+                    continue
+                resp.raise_for_status()
+                data = resp.json()
+                break
+            except httpx.TransportError as e:
+                last_exc = e
+                continue
+        else:
+            assert last_exc is not None
+            raise last_exc
+
+    # Surface GraphQL-level errors. The Morpho API returns 200 with an `errors`
+    # array on schema/query errors; without this check those failures silently
+    # produced empty snapshots — exactly the live-data zeros bug we shipped.
+    if isinstance(data, dict) and data.get("errors"):
+        raise ValueError(
+            f"Morpho GraphQL returned errors for vault {vault_address}: "
+            f"{data['errors']!r}"
         )
-        resp.raise_for_status()
-        data = resp.json()
     return _parse_response(data, vault_address, block or 0)
 
 
@@ -121,6 +165,22 @@ def _parse_response(payload: dict, vault_address: str, block: int) -> VaultSnaps
         lltv = int(mkt.get("lltv", 0) or 0)
         if not (0 < lltv < 10**18):
             continue
+        # Skip markets with zero/missing oracle price. Previously this code
+        # substituted 1 for a missing price, which silently produced garbage
+        # LTV math (debt × 10^36 / 1 ≈ infinity on every position). Better to
+        # drop the market with a warning so the curator sees the gap.
+        raw_price = mkt_state.get("price", 0) or 0
+        oracle_price = int(raw_price)
+        if oracle_price <= 0:
+            warnings.warn(
+                f"Skipping market {mkt.get('uniqueKey')!r}: "
+                f"oracle price is {raw_price!r} (zero/missing). "
+                "This usually means the oracle is unset, paused, or the API "
+                "is returning a stub. Inspect the oracle contract before "
+                "trusting any detector output for this vault.",
+                stacklevel=2,
+            )
+            continue
         markets.append(
             MarketState(
                 market_id=mkt["uniqueKey"],
@@ -131,7 +191,7 @@ def _parse_response(payload: dict, vault_address: str, block: int) -> VaultSnaps
                 total_supply_assets=int(mkt_state.get("supplyAssets", 0) or 0),
                 total_borrow_assets=int(mkt_state.get("borrowAssets", 0) or 0),
                 total_collateral_assets=int(mkt_state.get("collateralAssets", 0) or 0),
-                oracle_price_36dec=int(mkt_state.get("price", 0) or 0) or 1,
+                oracle_price_36dec=oracle_price,
                 lltv_wad=lltv,
                 supply_cap=int(alloc.get("supplyCap") or 0),
             )
@@ -178,9 +238,47 @@ def load_fixture(name: str) -> VaultSnapshot:
 
 
 def load_history(name: str) -> VaultHistory:
-    """Load a multi-snapshot replay fixture."""
+    """Load a multi-snapshot replay fixture.
+
+    Supports two on-disk layouts:
+
+      1. A single index fixture `data/fixtures/<name>.json` containing keys
+         `{"vault_address": "0x...", "snapshot_names": ["snap1", "snap2"]}`,
+         where each `snap_i` is itself a fixture file in the same directory.
+      2. A directory `data/fixtures/<name>/` with `*.json` files, each a
+         full `VaultSnapshot` payload sharing the same `vault_address`.
+
+    Raises:
+        FileNotFoundError if neither layout exists.
+        ValueError if the snapshots in a directory layout disagree on
+            `vault_address`.
+    """
     fixtures_dir = Path(__file__).resolve().parent.parent.parent / "data" / "fixtures"
-    path = fixtures_dir / f"{name}.json"
-    raw = json.loads(path.read_text())
-    snapshots = [load_fixture(s) for s in raw["snapshot_names"]]
-    return VaultHistory(vault_address=raw["vault_address"], snapshots=snapshots)
+    index_path = fixtures_dir / f"{name}.json"
+    dir_path = fixtures_dir / name
+
+    if index_path.exists():
+        raw = json.loads(index_path.read_text())
+        snapshots = [load_fixture(s) for s in raw["snapshot_names"]]
+        return VaultHistory(vault_address=raw["vault_address"], snapshots=snapshots)
+
+    if dir_path.is_dir():
+        snapshots = []
+        for child in sorted(dir_path.glob("*.json")):
+            # `load_fixture` expects a name (no .json suffix) relative to the
+            # fixtures root — reconstruct from the relative path.
+            rel = child.relative_to(fixtures_dir).with_suffix("")
+            snapshots.append(load_fixture(str(rel)))
+        if not snapshots:
+            raise FileNotFoundError(f"No *.json snapshots found in {dir_path}")
+        addrs = {s.vault_address for s in snapshots}
+        if len(addrs) != 1:
+            raise ValueError(
+                f"Snapshots in {dir_path} disagree on vault_address: {addrs}"
+            )
+        return VaultHistory(vault_address=snapshots[0].vault_address, snapshots=snapshots)
+
+    raise FileNotFoundError(
+        f"No history fixture named '{name}' (looked for "
+        f"{index_path} and {dir_path}/)"
+    )

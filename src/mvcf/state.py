@@ -34,7 +34,7 @@ class MarketState(BaseModel):
     convention (oracle.price() returns collateral_units * 10^36 / loan_units).
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     market_id: str = Field(..., description="bytes32 market id, hex")
     block: int
@@ -71,7 +71,7 @@ class MarketState(BaseModel):
 class BorrowerPosition(BaseModel):
     """A single borrower position in one market."""
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     market_id: str
     borrower: str = Field(..., description="address")
@@ -105,7 +105,7 @@ class VaultSnapshot(BaseModel):
     Aggregates per-market state and a sample of borrower positions.
     """
 
-    model_config = ConfigDict(frozen=True)
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     vault_address: str
     block: int

@@ -3,7 +3,7 @@
 Auto-committed by the [Live snapshot workflow](../.github/workflows/live-snapshot.yml).
 Runs once per day (~06:17 UTC) and captures the current state of
 [Steakhouse USDC](https://etherscan.io/address/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB),
-the flagship MetaMorpho vault on Ethereum mainnet (>$120M TVL).
+the flagship MetaMorpho vault on Ethereum mainnet (~$114M TVL as of 2026-05).
 
 ## Files
 

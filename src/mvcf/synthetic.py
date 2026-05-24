@@ -90,7 +90,9 @@ def generate_synthetic_vault(
         total_assets=total_assets,
         total_shares=total_assets,
         top_depositors=[
-            (f"0x{'D' * 38}{i:04x}"[:42], total_assets // (i + 1) // 10) for i in range(10)
+            # Unique 42-char hex addresses per i (previously truncated → all 10
+            # depositors had the same address, breaking concentration metrics).
+            (f"0xDEAD{i:036x}", total_assets // (i + 1) // 10) for i in range(10)
         ],
         markets=markets,
         borrowers=borrowers,

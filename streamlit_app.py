@@ -49,13 +49,17 @@ with st.sidebar:
             "Fixture",
             ["steakhouse_usdc_snapshot_demo", "distressed_single_market_demo"],
         )
-        snap_loader = lambda: load_fixture(fixture_name)
+
+        def snap_loader() -> object:
+            return load_fixture(fixture_name)
     else:
         vault_addr = st.text_input(
             "Vault address (0x…)",
             value="0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
         )
-        snap_loader = lambda: fetch_vault_snapshot(vault_addr)
+
+        def snap_loader() -> object:
+            return fetch_vault_snapshot(vault_addr)
 
     st.divider()
     st.header("Detector parameters")

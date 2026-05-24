@@ -15,7 +15,7 @@ This is curator-side counterfactual reasoning, the kind of question a Morpho cur
 
 🔍 **Live demo (no clone needed):** [**mkzung.github.io/morpho-vault-counterfactuals**](https://mkzung.github.io/morpho-vault-counterfactuals/) — pre-rendered HTML dashboards on demo fixtures.
 
-📡 **Live mainnet data:** [`live-data/`](./live-data/) — a nightly GitHub Actions cron fetches the current state of the real [Steakhouse USDC vault](https://etherscan.io/address/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB) on Ethereum mainnet (current vault TVL is visible in the live JSON snapshot — typically >$100M) and commits a fresh HTML/JSON/Markdown report. The repo doubles as a public time-series of vault-level curator metrics. Note: market-level detectors (`UtilizationInversion`) are fully populated from the public Morpho Blue API; borrower-position-dependent detectors require an additional subgraph fetch which is not yet wired in — these read zero on live snapshots until that's added.
+📡 **Live mainnet data:** [`live-data/`](./live-data/) — a nightly GitHub Actions cron fetches the current state of the real [Steakhouse USDC vault](https://etherscan.io/address/0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB) on Ethereum mainnet (current vault TVL is visible in the live JSON snapshot — ~$114M as of 2026-05) and commits a fresh HTML/JSON/Markdown report. The repo doubles as a public time-series of vault-level curator metrics. Note: market-level detectors (`UtilizationInversion`) are fully populated from the public Morpho Blue API; borrower-position-dependent detectors require an additional subgraph fetch which is not yet wired in — these read zero on live snapshots until that's added.
 
 🎛 **Interactive Streamlit dashboard:** `streamlit run streamlit_app.py` after `pip install streamlit`.
 
@@ -74,7 +74,7 @@ Pure-function detectors. All I/O isolated in `fetch.py`. Same snapshot in, same 
 ```bash
 git clone https://github.com/mkzung/morpho-vault-counterfactuals.git
 cd morpho-vault-counterfactuals
-pip install -e ".[dev]"
+pip install -e ".[dev,notebook]"
 pytest tests/                                          # ~1s, no RPC required
 jupyter notebook notebooks/01_demo.ipynb               # walk through detectors
 ```

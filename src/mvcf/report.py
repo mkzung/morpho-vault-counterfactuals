@@ -46,10 +46,23 @@ def as_markdown(snapshot: VaultSnapshot, results: list[DetectorResult]) -> str:
     addr_short = snapshot.vault_address[:6] + "…" + snapshot.vault_address[-4:]
     lines.append(f"# Vault risk brief — `{addr_short}`")
     lines.append("")
-    lines.append(f"- **Block:** {snapshot.block:,}")
+    # Block is None / 0 when sourced from the Morpho Blue API (which does not
+    # expose the indexer block); only fixtures pin to a real block.
+    if snapshot.block:
+        lines.append(f"- **Block:** {snapshot.block:,}")
+    else:
+        lines.append("- **Block:** n/a (Blue API response is not block-pinned)")
     lines.append(f"- **Total assets (loan-asset units):** `{snapshot.total_assets:,}`")
     lines.append(f"- **Markets:** {len(snapshot.markets)}")
-    lines.append(f"- **Borrowers analyzed:** {len(snapshot.borrowers)}")
+    if snapshot.borrowers:
+        lines.append(f"- **Borrowers analyzed:** {len(snapshot.borrowers)}")
+    else:
+        lines.append(
+            "- **Borrowers analyzed:** 0 — the public Blue API does not return "
+            "per-borrower positions. Market-level detectors "
+            "(`UtilizationInversion`) run on live snapshots; borrower-level "
+            "detectors require a subgraph fetch that is not yet wired in."
+        )
     lines.append(
         f"- **HHI (depositor concentration):** `{snapshot.hhi:.3f}` "
         f"(top-1 = {snapshot.top1_share:.1%})"

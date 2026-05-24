@@ -63,3 +63,22 @@ jobs:
         run: mvcf analyze --fixture steakhouse_usdc_snapshot_demo --format markdown
       - name: CLI sweep
         run: mvcf sweep collateral --fixture steakhouse_usdc_snapshot_demo --shocks=-0.05,-0.20,-0.50
+
+  audit:
+    # Audit runtime + dev deps for known CVEs. Non-blocking on transient
+    # advisory-DB hiccups but visible in the run log; fail PR only on a real
+    # vulnerability in something we depend on.
+    name: pip-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install pip-audit
+      - name: Audit
+        run: pip-audit --strict --ignore-vuln PYSEC-0000-NONE
