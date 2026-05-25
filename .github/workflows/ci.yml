@@ -81,4 +81,8 @@ jobs:
           pip install -e ".[dev]"
           pip install pip-audit
       - name: Audit
-        run: pip-audit --strict --ignore-vuln PYSEC-0000-NONE
+        # --skip-editable: don't try to look up the current project (installed
+        # via `pip install -e .`) on PyPI — it isn't published there. Only
+        # audit the transitive dependency tree, which is what we actually care
+        # about for CVE coverage.
+        run: pip-audit --strict --skip-editable --ignore-vuln PYSEC-0000-NONE
