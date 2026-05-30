@@ -71,7 +71,7 @@ def fetch_vault_snapshot(
           lastTotalAssets
           allocation {
             market {
-              uniqueKey
+              marketId
               collateralAsset { address symbol decimals }
               loanAsset { address symbol decimals }
               state {
@@ -173,7 +173,7 @@ def _parse_response(payload: dict, vault_address: str, block: int) -> VaultSnaps
         oracle_price = int(raw_price)
         if oracle_price <= 0:
             warnings.warn(
-                f"Skipping market {mkt.get('uniqueKey')!r}: "
+                f"Skipping market {mkt.get('marketId')!r}: "
                 f"oracle price is {raw_price!r} (zero/missing). "
                 "This usually means the oracle is unset, paused, or the API "
                 "is returning a stub. Inspect the oracle contract before "
@@ -183,7 +183,7 @@ def _parse_response(payload: dict, vault_address: str, block: int) -> VaultSnaps
             continue
         markets.append(
             MarketState(
-                market_id=mkt["uniqueKey"],
+                market_id=mkt["marketId"],
                 block=block,
                 timestamp=0,  # the Blue API doesn't always return ts; pin later
                 collateral_token=mkt["collateralAsset"]["address"],
