@@ -89,7 +89,7 @@ def _vault_payload(*, oracle_price: int) -> dict:
                     "allocation": [
                         {
                             "market": {
-                                "uniqueKey": "0xMkt",
+                                "marketId": "0xMkt",
                                 "collateralAsset": {
                                     "address": "0xC",
                                     "symbol": "C",
