@@ -47,10 +47,10 @@
 <body>
 
 <h1>Vault risk brief — <code>0xBEEF…64CB</code></h1>
-<div class="sub">Generated 2026-06-05 10:16 UTC · block <code>0</code> · 8 markets · 0 borrowers analyzed</div>
+<div class="sub">Generated 2026-06-06 08:46 UTC · block <code>0</code> · 8 markets · 0 borrowers analyzed</div>
 
 <div class="meta">
-  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">100,749,372 (units / 1e6)</div></div>
+  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">100,519,815 (units / 1e6)</div></div>
   <div class="meta-card"><div class="meta-label">HHI</div><div class="meta-value">0.000</div></div>
   <div class="meta-card"><div class="meta-label">Top-1 share</div><div class="meta-value">0.0%</div></div>
   <div class="meta-card"><div class="meta-label">Markets</div><div class="meta-value">8</div></div>
@@ -60,7 +60,7 @@
 <div class="grid">
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">OracleFreezeReplay <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_bad_debt</div><div class="det-interp">If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 positions) crosses the bad-debt frontier — LTV &gt; 0.952 at LIF 5% — meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.</div></div>
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">CollateralCascade <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_liquidatable_debt</div><div class="det-interp">At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 0 loan-asset units across affected markets.</div></div>
-<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">DepositorExitShock <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 0 vs idle supply 46,649,163,750,813 → 0.0% would be queue-rationed until borrowers repay.</div></div>
+<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">DepositorExitShock <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 0 vs idle supply 50,134,590,727,870 → 0.0% would be queue-rationed until borrowers repay.</div></div>
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">UtilizationInversion <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_markets_above_target</div><div class="det-interp">0 / 8 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.</div></div>
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LiquidationLatency <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_unprofitable_to_liquidate</div><div class="det-interp">At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 0 positions where liquidator profit (debt × 5%) is below cost — these accrue bad-debt risk during oracle-shock windows.</div></div>
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LTVDistributionStress <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_debt_within_5pp_of_lltv</div><div class="det-interp">No borrower positions in the snapshot — LTV distribution is undefined. (Live MetaMorpho fetches via the public Blue API do not currently include individual borrower positions; this detector reads zero on live snapshots until a subgraph fetch is wired in.)</div></div>
@@ -81,14 +81,14 @@
 <th style="text-align:right">Utilization</th><th style="text-align:right">LLTV</th><th style="text-align:right">Supply cap</th>
 </tr></thead>
 <tbody>
-<tr><td><code>0x3a85e6197511…</code></td><td style='text-align:right'>149,090,227,774,707</td><td style='text-align:right'>133,385,263,077,634</td><td style='text-align:right'>89.5%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
-<tr><td><code>0x7e585a933ffe…</code></td><td style='text-align:right'>2,211,351,539,420</td><td style='text-align:right'>1,972,080,966,739</td><td style='text-align:right'>89.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
-<tr><td><code>0x94b823e6bd8e…</code></td><td style='text-align:right'>3,438,864,555,196</td><td style='text-align:right'>3,086,149,353,440</td><td style='text-align:right'>89.7%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
-<tr><td><code>0x09dc9e7eb5d8…</code></td><td style='text-align:right'>369,418,268,644</td><td style='text-align:right'>330,626,374,235</td><td style='text-align:right'>89.5%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
-<tr><td><code>0xbc99de6a8890…</code></td><td style='text-align:right'>86,485,069,053</td><td style='text-align:right'>77,267,606,990</td><td style='text-align:right'>89.3%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1,000,000,000,000,000</td></tr>
-<tr><td><code>0x64d65c9a2d91…</code></td><td style='text-align:right'>263,454,499,903,099</td><td style='text-align:right'>238,449,110,642,797</td><td style='text-align:right'>90.5%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1,000,000,000,000,000</td></tr>
-<tr><td><code>0xb323495f7e41…</code></td><td style='text-align:right'>47,253,654,714,930</td><td style='text-align:right'>42,757,725,357,327</td><td style='text-align:right'>90.5%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
-<tr><td><code>0x34377fc4f617…</code></td><td style='text-align:right'>7,812,678,047,024</td><td style='text-align:right'>7,009,792,742,098</td><td style='text-align:right'>89.7%</td><td style='text-align:right'>77%</td><td style='text-align:right'>20,000,000,000,000</td></tr>
+<tr><td><code>0x3a85e6197511…</code></td><td style='text-align:right'>154,185,926,457,896</td><td style='text-align:right'>137,519,497,438,924</td><td style='text-align:right'>89.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
+<tr><td><code>0x94b823e6bd8e…</code></td><td style='text-align:right'>3,357,603,792,825</td><td style='text-align:right'>2,994,101,418,727</td><td style='text-align:right'>89.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
+<tr><td><code>0x7e585a933ffe…</code></td><td style='text-align:right'>2,529,568,928,921</td><td style='text-align:right'>2,247,331,452,237</td><td style='text-align:right'>88.8%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
+<tr><td><code>0x09dc9e7eb5d8…</code></td><td style='text-align:right'>503,333,305,011</td><td style='text-align:right'>448,671,534,354</td><td style='text-align:right'>89.1%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
+<tr><td><code>0xbc99de6a8890…</code></td><td style='text-align:right'>86,721,289,713</td><td style='text-align:right'>77,176,379,835</td><td style='text-align:right'>89.0%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1,000,000,000,000,000</td></tr>
+<tr><td><code>0x64d65c9a2d91…</code></td><td style='text-align:right'>264,749,084,852,365</td><td style='text-align:right'>237,121,918,353,612</td><td style='text-align:right'>89.6%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1,000,000,000,000,000</td></tr>
+<tr><td><code>0xb323495f7e41…</code></td><td style='text-align:right'>40,513,916,348,219</td><td style='text-align:right'>36,115,113,438,000</td><td style='text-align:right'>89.1%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200,000,000,000,000</td></tr>
+<tr><td><code>0x34377fc4f617…</code></td><td style='text-align:right'>6,742,888,515,759</td><td style='text-align:right'>6,010,642,747,150</td><td style='text-align:right'>89.1%</td><td style='text-align:right'>77%</td><td style='text-align:right'>20,000,000,000,000</td></tr>
 </tbody>
 </table>
 
