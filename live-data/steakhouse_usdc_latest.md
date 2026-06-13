@@ -1,7 +1,7 @@
 # Vault risk brief — `0xBEEF…64CB`
 
 - **Block:** n/a (Blue API response is not block-pinned)
-- **Total assets (loan-asset units):** `97,029,811,364,805`
+- **Total assets (loan-asset units):** `98,075,644,416,281`
 - **Markets:** 8
 - **Borrowers analyzed:** 0 — the public Blue API does not return per-borrower positions. Market-level detectors (`UtilizationInversion`) run on live snapshots; borrower-level detectors require a subgraph fetch that is not yet wired in.
 - **HHI (depositor concentration):** `0.000` (top-1 = 0.0%)
@@ -13,7 +13,7 @@
 | `OracleFreezeReplay` | `0.000` | fraction_bad_debt |
 | `CollateralCascade` | `0.000` | fraction_liquidatable_debt |
 | `DepositorExitShock` | `0.000` | fraction_rationed |
-| `UtilizationInversion` | `0.000` | fraction_markets_above_target |
+| `UtilizationInversion` | `0.125` | fraction_markets_above_target |
 | `LiquidationLatency` | `0.000` | fraction_unprofitable_to_liquidate |
 | `LTVDistributionStress` | `0.000` | fraction_debt_within_5pp_of_lltv |
 
@@ -59,7 +59,7 @@ At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (de
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 0 vs idle supply 44,909,286,628,398 → 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 0 vs idle supply 45,560,015,855,457 → 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
@@ -67,7 +67,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 44,909,286,628,398 → 0.
 {
   "top_n": 1,
   "exit_demand_loan_assets": 0,
-  "idle_supply_loan_assets": 44909286628398,
+  "idle_supply_loan_assets": 45560015855457,
   "rationing_gap": 0,
   "hhi": 0.0
 }
@@ -77,14 +77,19 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 44,909,286,628,398 → 0.
 
 ### UtilizationInversion
 
-0 / 8 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.
+1 / 8 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
   "target_util_max": 0.92,
-  "breached_markets": []
+  "breached_markets": [
+    {
+      "market_id": "0x34377fc4f617c51818e92c79df31ff270c6a91bc94ad32e367fdf59b9f4ac5dd",
+      "utilization": 0.9361920141603458
+    }
+  ]
 }
 ```
 
