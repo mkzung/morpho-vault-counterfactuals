@@ -1,7 +1,7 @@
 # Vault risk brief — `0xBEEF…64CB`
 
 - **Block:** n/a (Blue API response is not block-pinned)
-- **Total assets (loan-asset units):** `94,018,317,913,704`
+- **Total assets (loan-asset units):** `85,497,743,944,997`
 - **Markets:** 8
 - **Borrowers analyzed:** 0 — the public Blue API does not return per-borrower positions. Market-level detectors (`UtilizationInversion`) run on live snapshots; borrower-level detectors require a subgraph fetch that is not yet wired in.
 - **HHI (depositor concentration):** `0.000` (top-1 = 0.0%)
@@ -59,7 +59,7 @@ At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (de
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 0 vs idle supply 67,307,566,295,827 → 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 0 vs idle supply 42,152,426,068,285 → 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
@@ -67,7 +67,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 67,307,566,295,827 → 0.
 {
   "top_n": 1,
   "exit_demand_loan_assets": 0,
-  "idle_supply_loan_assets": 67307566295827,
+  "idle_supply_loan_assets": 42152426068285,
   "rationing_gap": 0,
   "hhi": 0.0
 }
