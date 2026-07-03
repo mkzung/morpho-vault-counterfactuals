@@ -1,8 +1,8 @@
 # Vault risk brief — `0xBEEF…64CB`
 
 - **Block:** n/a (Blue API response is not block-pinned)
-- **Total assets (loan-asset units):** `93,894,708,360,133`
-- **Markets:** 8
+- **Total assets (loan-asset units):** `93,924,867,644,772`
+- **Markets:** 9
 - **Borrowers analyzed:** 0 — the public Blue API does not return per-borrower positions. Market-level detectors (`UtilizationInversion`) run on live snapshots; borrower-level detectors require a subgraph fetch that is not yet wired in.
 - **HHI (depositor concentration):** `0.000` (top-1 = 0.0%)
 
@@ -59,7 +59,7 @@ At a -20% collateral shock, 0.0% of debt becomes liquidatable; liquidity gap (de
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 0 vs idle supply 42,189,006,320,591 → 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 0 vs idle supply 51,437,510,239,930 → 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
@@ -67,7 +67,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 42,189,006,320,591 → 0.
 {
   "top_n": 1,
   "exit_demand_loan_assets": 0,
-  "idle_supply_loan_assets": 42189006320591,
+  "idle_supply_loan_assets": 51437510239930,
   "rationing_gap": 0,
   "hhi": 0.0
 }
@@ -77,7 +77,7 @@ If top-1 depositor(s) exit, demand is 0 vs idle supply 42,189,006,320,591 → 0.
 
 ### UtilizationInversion
 
-0 / 8 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.
+0 / 9 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.
 
 <details><summary>Evidence</summary>
 
