@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Vault risk brief — 0xDEAD…0001</title>
+<title>Vault risk brief - 0xDEAD...0001</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 <style>
@@ -46,32 +46,33 @@
 </head>
 <body>
 
-<h1>Vault risk brief — <code>0xDEAD…0001</code></h1>
-<div class="sub">Generated 2026-05-16 20:59 UTC · block <code>19,500,001</code> · 1 markets · 3 borrowers analyzed</div>
+<h1>Vault risk brief: <code>0xDEAD...0001</code></h1>
+<div class="sub">Generated 2026-07-04 18:25 UTC | block <code>19,500,001</code> | 1 markets | 3 borrowers analyzed (0.1% of market debt)</div>
 
 <div class="meta">
-  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">5,000,000 (units / 1e6)</div></div>
+  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">5.00M USDC</div></div>
   <div class="meta-card"><div class="meta-label">HHI</div><div class="meta-value">0.421</div></div>
   <div class="meta-card"><div class="meta-label">Top-1 share</div><div class="meta-value">60.0%</div></div>
   <div class="meta-card"><div class="meta-label">Markets</div><div class="meta-value">1</div></div>
 </div>
+<div class="sub" style="margin-top:-14px">Supply / borrow figures below are <b>market-wide</b>: a MetaMorpho vault supplies into shared Morpho Blue markets, so borrower positions span all users of those markets, not only debt funded by this vault (which is why market debt can exceed the vault's own assets).</div>
 
 <h2>Counterfactual risk dashboard</h2>
 <div class="grid">
-<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">OracleFreezeReplay <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_bad_debt</div><div class="det-interp">If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 positions) crosses the bad-debt frontier — LTV &gt; 0.952 at LIF 5% — meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.</div></div>
+<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">OracleFreezeReplay <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_bad_debt</div><div class="det-interp">If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 positions) crosses the bad-debt frontier - LTV &gt; 0.952 at LIF 5% - meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.</div></div>
 <div class="det-card" style="border-left-color:#dc2626"><div class="det-name">CollateralCascade <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_liquidatable_debt</div><div class="det-interp">At a -20% collateral shock, 100.0% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 0 loan-asset units across affected markets.</div></div>
-<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">DepositorExitShock <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">96.7%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 3,000,000,000,000 vs idle supply 100,000,000,000 → 96.7% would be queue-rationed until borrowers repay.</div></div>
-<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">UtilizationInversion <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_markets_above_target</div><div class="det-interp">1 / 1 markets are above the 92% utilization band — IRM curves enter the steep regime; depositor withdrawal pressure compounds.</div></div>
-<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LiquidationLatency <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_unprofitable_to_liquidate</div><div class="det-interp">At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 1 position where liquidator profit (debt × 5%) is below cost — these accrue bad-debt risk during oracle-shock windows.</div></div>
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">DepositorExitShock <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">96.7%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 3,000,000,000,000 vs idle supply 100,000,000,000 -&gt; 96.7% would be queue-rationed until borrowers repay.</div></div>
+<div class="det-card" style="border-left-color:#dc2626"><div class="det-name">UtilizationInversion <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_markets_above_target</div><div class="det-interp">1 / 1 markets are above the 92% utilization band - IRM curves enter the steep regime; depositor withdrawal pressure compounds.</div></div>
+<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LiquidationLatency <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_unprofitable_to_liquidate</div><div class="det-interp">At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 1 position where liquidator profit (debt × 5%) is below cost - these accrue bad-debt risk during oracle-shock windows.</div></div>
 <div class="det-card" style="border-left-color:#dc2626"><div class="det-name">LTVDistributionStress <span class="badge" style="background:#dc2626">CRITICAL</span></div><div class="det-metric" style="color:#dc2626">100.0%</div><div class="det-unit">fraction_debt_within_5pp_of_lltv</div><div class="det-interp">100.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 85.45%. A small adverse oracle move would push this debt into liquidation.</div></div>
 </div>
 
 <h2>Sensitivity sweeps</h2>
 <div class="charts">
-  <div class="chart-wrap"><div class="chart-title">Collateral cascade — % debt liquidatable vs shock magnitude</div><canvas id="cascadeChart"></canvas></div>
-  <div class="chart-wrap"><div class="chart-title">Oracle freeze — % bad debt vs collateral drift while stale</div><canvas id="oracleChart"></canvas></div>
+  <div class="chart-wrap"><div class="chart-title">Collateral cascade - % debt liquidatable vs shock magnitude</div><canvas id="cascadeChart"></canvas></div>
+  <div class="chart-wrap"><div class="chart-title">Oracle freeze - % bad debt vs collateral drift while stale</div><canvas id="oracleChart"></canvas></div>
   <div class="chart-wrap"><div class="chart-title">Borrower LTV histogram (count of positions)</div><canvas id="ltvChart"></canvas></div>
-  <div class="chart-wrap"><div class="chart-title">Liquidation latency — % unprofitable vs gas price</div><canvas id="gasChart"></canvas></div>
+  <div class="chart-wrap"><div class="chart-title">Liquidation latency - % unprofitable vs gas price</div><canvas id="gasChart"></canvas></div>
 </div>
 
 <h2>Per-market state</h2>
@@ -81,20 +82,20 @@
 <th style="text-align:right">Utilization</th><th style="text-align:right">LLTV</th><th style="text-align:right">Supply cap</th>
 </tr></thead>
 <tbody>
-<tr><td><code>0x0000ef34e2fc…</code></td><td style='text-align:right'>5,000,000,000,000</td><td style='text-align:right'>4,900,000,000,000</td><td style='text-align:right' class="hot">98.0%</td><td style='text-align:right'>86%</td><td style='text-align:right'>5,000,000,000,000</td></tr>
+<tr><td><code>0x0000ef34e2fc...</code></td><td style='text-align:right'>5.00M USDC</td><td style='text-align:right'>4.90M USDC</td><td style='text-align:right' class="hot">98.0%</td><td style='text-align:right'>86%</td><td style='text-align:right'>5.00M USDC</td></tr>
 </tbody>
 </table>
 
 <h2>Suggested curator actions</h2>
 <ul>
-<li><b>CollateralCascade > 30%</b> — lower LLTV on the concentrated market(s) by 1-3 percentage points.</li>
-<li><b>DepositorExitShock > 20%</b> — reduce vault-level supply cap to free idle supply.</li>
-<li><b>UtilizationInversion ≥ 50%</b> — raise IRM upper rate or reallocate via the MetaMorpho <code>reallocate()</code> flow.</li>
-<li><b>LTVDistributionStress > 40%</b> — lower LLTV proactively before the next adverse oracle move.</li>
+<li><b>CollateralCascade > 30%</b> - lower LLTV on the concentrated market(s) by 1-3 percentage points.</li>
+<li><b>DepositorExitShock > 20%</b> - reduce vault-level supply cap to free idle supply.</li>
+<li><b>UtilizationInversion ≥ 50%</b> - raise IRM upper rate or reallocate via the MetaMorpho <code>reallocate()</code> flow.</li>
+<li><b>LTVDistributionStress > 40%</b> - lower LLTV proactively before the next adverse oracle move.</li>
 </ul>
 
 <footer>
-Generated by <a href="https://github.com/mkzung/morpho-vault-counterfactuals">morpho-vault-counterfactuals</a> ·
+Generated by <a href="https://github.com/mkzung/morpho-vault-counterfactuals">morpho-vault-counterfactuals</a> |
 counterfactual risk monitoring for Morpho MetaMorpho vaults
 </footer>
 
@@ -145,3 +146,4 @@ new Chart(document.getElementById('gasChart'), {
 </script>
 </body>
 </html>
+

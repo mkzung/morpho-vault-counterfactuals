@@ -1,4 +1,4 @@
-"""morpho-vault-counterfactuals — historical replay + adverse-scenario stress testing for Morpho MetaMorpho vaults."""
+"""morpho-vault-counterfactuals - historical replay + adverse-scenario stress testing for Morpho MetaMorpho vaults."""
 
 from .detectors import (
     CollateralCascade,

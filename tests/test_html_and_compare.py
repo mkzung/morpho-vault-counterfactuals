@@ -40,9 +40,9 @@ def test_html_report_with_precomputed_results(snap):
 
 
 def test_html_report_traffic_light_colors_present(snap):
-    """The severity coloring is the curator-facing UX feature — must not regress."""
+    """The severity coloring is the curator-facing UX feature - must not regress."""
     out = as_html(snap)
-    # Steakhouse demo has CRITICAL and OK detectors at default params → both colors must appear
+    # Steakhouse demo has CRITICAL and OK detectors at default params -> both colors must appear
     assert "#dc2626" in out  # CRITICAL red
     assert "#16a34a" in out  # OK green
 

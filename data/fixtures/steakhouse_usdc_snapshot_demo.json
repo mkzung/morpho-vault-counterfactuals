@@ -1,10 +1,12 @@
 {
-  "_comment": "Synthetic snapshot styled after the Steakhouse USDC MetaMorpho vault on mainnet (vault address 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB). Block and amounts are ILLUSTRATIVE — used for reproducible offline testing and notebook demo. Oracle prices follow Morpho's convention: price = real_price * 10^(36 + loan_decimals - collateral_decimals). USDC has 6 decimals. For live snapshots, run `mvcf analyze --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB` or open live-data/steakhouse_usdc_latest.html.",
+  "_comment": "Synthetic snapshot styled after the Steakhouse USDC MetaMorpho vault on mainnet (vault address 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB). Block and amounts are ILLUSTRATIVE - used for reproducible offline testing and notebook demo. Oracle prices follow Morpho's convention: price = real_price * 10^(36 + loan_decimals - collateral_decimals). USDC has 6 decimals. For live snapshots, run `mvcf analyze --vault 0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB` or open live-data/steakhouse_usdc_latest.html.",
   "vault_address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
   "block": 19500000,
   "timestamp": 1716000000,
   "total_assets": 250000000000000,
   "total_shares": 245000000000000,
+  "loan_symbol": "USDC",
+  "loan_decimals": 6,
   "top_depositors": [
     ["0x1111111111111111111111111111111111111111", 49000000000000],
     ["0x2222222222222222222222222222222222222222", 25000000000000],

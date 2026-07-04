@@ -8,9 +8,9 @@ from mvcf import diff_snapshots, load_fixture, run_all_detectors, summarize_diff
 from mvcf.__main__ import main
 from mvcf.synthetic import generate_synthetic_vault
 
-# ──────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------
 # Diff module
-# ──────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------
 
 
 def test_diff_same_snapshot_is_flat():
@@ -60,9 +60,9 @@ def test_cli_diff_same_fixture(capsys):
     assert "Vault diff" in out
 
 
-# ──────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------
 # Synthetic generator + scaling
-# ──────────────────────────────────────────────────────────────────────
+# ----------------------------------------------------------------------
 
 
 def test_synthetic_vault_basic():
@@ -78,7 +78,7 @@ def test_synthetic_vault_basic():
 
 
 def test_synthetic_vault_deterministic():
-    """Same seed → bit-for-bit identical snapshot."""
+    """Same seed -> bit-for-bit identical snapshot."""
     a = generate_synthetic_vault(n_markets=4, n_borrowers=100, seed=42)
     b = generate_synthetic_vault(n_markets=4, n_borrowers=100, seed=42)
     assert a.total_assets == b.total_assets

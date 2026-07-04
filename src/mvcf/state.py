@@ -30,7 +30,7 @@ class MarketState(BaseModel):
     """A single Morpho Blue market the vault is exposed to at one block.
 
     All asset amounts are in the loan-asset's smallest unit (e.g., USDC has 6
-    decimals → 1_000_000 == 1 USDC). Prices are in 36-decimal Morpho oracle
+    decimals -> 1_000_000 == 1 USDC). Prices are in 36-decimal Morpho oracle
     convention (oracle.price() returns collateral_units * 10^36 / loan_units).
     """
 
@@ -112,6 +112,12 @@ class VaultSnapshot(BaseModel):
     timestamp: int
     total_assets: int = Field(ge=0, description="vault assets, loan-asset units")
     total_shares: int = Field(gt=0)
+    loan_symbol: str = Field(
+        default="", description="vault loan-asset symbol, e.g. USDC (for display)"
+    )
+    loan_decimals: int = Field(
+        default=0, ge=0, description="vault loan-asset decimals; 0 = unknown"
+    )
     top_depositors: list[tuple[str, int]] = Field(
         default_factory=list,
         description="(address, shares) sorted desc, top N",
@@ -125,7 +131,7 @@ class VaultSnapshot(BaseModel):
         if self.total_shares == 0 or not self.top_depositors:
             return 0.0
         shares = [s for _, s in self.top_depositors]
-        # tail (untracked depositors) — assume single residual bucket
+        # tail (untracked depositors) - assume single residual bucket
         tail = max(0, self.total_shares - sum(shares))
         all_shares = shares + ([tail] if tail > 0 else [])
         return sum((s / self.total_shares) ** 2 for s in all_shares)
@@ -141,7 +147,7 @@ class VaultSnapshot(BaseModel):
 class VaultHistory:
     """Ordered series of VaultSnapshots for one vault.
 
-    Treated as an immutable replay log — detectors read but don't mutate.
+    Treated as an immutable replay log - detectors read but don't mutate.
     """
 
     vault_address: str

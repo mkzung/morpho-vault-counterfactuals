@@ -97,7 +97,7 @@ def test_liquidation_latency_runs(snap):
 
 
 def test_ltv_distribution_finds_near_lltv_positions(snap):
-    """The fixture deliberately includes one ezETH/USDC position underwater —
+    """The fixture deliberately includes one ezETH/USDC position underwater -
     detector should report some debt within 5pp of LLTV."""
     res = LTVDistributionStress().run(snap)
     assert res.headline_metric > 0.0

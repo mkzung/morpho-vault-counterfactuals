@@ -1,4 +1,4 @@
-"""Test the domain models — invariants on VaultSnapshot / MarketState / BorrowerPosition."""
+"""Test the domain models - invariants on VaultSnapshot / MarketState / BorrowerPosition."""
 
 import pytest
 from pydantic import ValidationError
@@ -75,7 +75,7 @@ def test_borrower_ltv_basic():
 
 
 def test_borrower_ltv_zero_collateral_with_debt_is_infinite():
-    """Bad-debt invariant violation — debt with no collateral. Returns inf
+    """Bad-debt invariant violation - debt with no collateral. Returns inf
     so detectors flag it instead of treating as a healthy 0% LTV position."""
     pos = BorrowerPosition(market_id="x", borrower="y", collateral=0, debt_assets=100)
     assert pos.ltv(10**36) == float("inf")
@@ -96,7 +96,7 @@ def test_vault_snapshot_hhi_concentrated():
         total_shares=100,
         top_depositors=[("0xa", 90), ("0xb", 10)],
     )
-    # Top depositor 0.9 → 0.81, second 0.1 → 0.01, total = 0.82
+    # Top depositor 0.9 -> 0.81, second 0.1 -> 0.01, total = 0.82
     assert abs(snap.hhi - 0.82) < 1e-6
     assert snap.top1_share == 0.9
 

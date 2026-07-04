@@ -1,4 +1,4 @@
-"""Snapshot diff — week-over-week curator review.
+"""Snapshot diff - week-over-week curator review.
 
 A curator's weekly question is: *what changed about this vault's risk
 profile since last week, and which detector(s) drove the change?*
@@ -125,24 +125,24 @@ def diff_snapshots(
 
 
 def summarize_diff(diff: VaultDiff) -> str:
-    """Plain-text rendering of a vault diff — week-over-week curator brief."""
+    """Plain-text rendering of a vault diff - week-over-week curator brief."""
     lines = [
-        "── Vault diff ──",
+        "-- Vault diff --",
         f"Vault:   {diff.vault_address}",
-        f"Blocks:  {diff.block_old:,} → {diff.block_new:,}",
-        f"Assets:  {diff.total_assets_old:,} → {diff.total_assets_new:,} "
+        f"Blocks:  {diff.block_old:,} -> {diff.block_new:,}",
+        f"Assets:  {diff.total_assets_old:,} -> {diff.total_assets_new:,} "
         f"({diff.total_assets_pct_change:+.1%})",
-        f"Markets: {diff.n_markets_old} → {diff.n_markets_new}",
-        f"Borrowers: {diff.n_borrowers_old} → {diff.n_borrowers_new}",
+        f"Markets: {diff.n_markets_old} -> {diff.n_markets_new}",
+        f"Borrowers: {diff.n_borrowers_old} -> {diff.n_borrowers_new}",
         "",
         "Detector deltas (sorted by absolute change):",
         "",
     ]
-    arrow = {"up": "▲", "down": "▼", "flat": "·"}
+    arrow = {"up": "^", "down": "v", "flat": "-"}
     for d in sorted(diff.deltas, key=lambda x: abs(x.delta), reverse=True):
         lines.append(
             f"  {arrow[d.direction]} {d.name:<24} "
-            f"{d.metric_old:>6.1%} → {d.metric_new:>6.1%}  "
+            f"{d.metric_old:>6.1%} -> {d.metric_new:>6.1%}  "
             f"({d.pp_change:+5.1f} pp)"
         )
     lines.append("")
@@ -151,7 +151,7 @@ def summarize_diff(diff: VaultDiff) -> str:
         lines.append("Top movers (≥ 5 pp change):")
         for m in movers:
             if abs(m.delta) >= 0.05:
-                lines.append(f"  → {m.name}: {m.pp_change:+.1f} pp ({m.direction})")
+                lines.append(f"  -> {m.name}: {m.pp_change:+.1f} pp ({m.direction})")
     else:
-        lines.append("No detector moved more than 5 pp — vault risk profile stable.")
+        lines.append("No detector moved more than 5 pp - vault risk profile stable.")
     return "\n".join(lines)

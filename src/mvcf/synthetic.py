@@ -1,4 +1,4 @@
-"""Synthetic snapshot generator — for performance benchmarking and unit testing.
+"""Synthetic snapshot generator - for performance benchmarking and unit testing.
 
 Real Morpho MetaMorpho vaults can have thousands of borrower positions. The
 detectors are O(borrowers × markets), so this module exists to verify the
@@ -60,7 +60,7 @@ def generate_synthetic_vault(
             )
         )
 
-    # Map market id → collateral decimals (set when the market was constructed)
+    # Map market id -> collateral decimals (set when the market was constructed)
     market_decimals = {m.market_id: (18 if i % 2 == 0 else 8) for i, m in enumerate(markets)}
 
     borrowers: list[BorrowerPosition] = []
@@ -90,7 +90,7 @@ def generate_synthetic_vault(
         total_assets=total_assets,
         total_shares=total_assets,
         top_depositors=[
-            # Unique 42-char hex addresses per i (previously truncated → all 10
+            # Unique 42-char hex addresses per i (previously truncated -> all 10
             # depositors had the same address, breaking concentration metrics).
             (f"0xDEAD{i:036x}", total_assets // (i + 1) // 10) for i in range(10)
         ],

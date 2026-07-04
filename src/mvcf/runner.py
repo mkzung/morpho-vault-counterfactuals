@@ -35,10 +35,10 @@ def run_all_detectors(
 
 
 def summarize(results: list[DetectorResult]) -> str:
-    """Plain-text summary of detector results — for CLI / curator handoff."""
-    lines = ["── Vault counterfactual risk summary ──", ""]
+    """Plain-text summary of detector results - for CLI / curator handoff."""
+    lines = ["=== Vault counterfactual risk summary ===", ""]
     for r in results:
         lines.append(f"[{r.name}]  {r.headline_metric:.3f} {r.headline_unit}")
-        lines.append(f"  → {r.interpretation}")
+        lines.append(f"  -> {r.interpretation}")
         lines.append("")
     return "\n".join(lines)

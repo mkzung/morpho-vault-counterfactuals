@@ -2,16 +2,16 @@
 
 Each detector takes the current `VaultSnapshot` (and optionally a `VaultHistory`)
 and computes what *would have* happened under one specific adverse counterfactual
-— oracle freeze, collateral cascade, top-depositor exit, etc.
+- oracle freeze, collateral cascade, top-depositor exit, etc.
 
-Design goals (informed by the Inca Challenge #492 forensic framework — same
+Design goals (informed by the Inca Challenge #492 forensic framework - same
 six-detector + reproducible-replay shape, applied to a new domain):
 
-  - Pure functions on snapshots → no live RPC inside detectors, all I/O in fetch.py.
+  - Pure functions on snapshots -> no live RPC inside detectors, all I/O in fetch.py.
   - Each detector returns a `DetectorResult` with a single headline number plus
     an `evidence` dict for the curator to inspect.
   - Risk is reported as fractional bad-debt or fractional-impairment, not
-    "good/bad" labels — Re7-style: curators decide thresholds.
+    "good/bad" labels - Re7-style: curators decide thresholds.
   - All detectors are deterministic given (snapshot, params).
 
 References:
@@ -27,9 +27,7 @@ from typing import Any
 
 from .state import VaultSnapshot
 
-# ──────────────────────────────────────────────────────────────────────
-# Common types
-# ──────────────────────────────────────────────────────────────────────
+# --- Common types ---
 
 
 @dataclass(frozen=True)
@@ -43,9 +41,7 @@ class DetectorResult:
     evidence: dict[str, Any] = field(default_factory=dict)
 
 
-# ──────────────────────────────────────────────────────────────────────
-# 1. Oracle freeze replay
-# ──────────────────────────────────────────────────────────────────────
+# --- 1. Oracle freeze replay ---
 
 
 class OracleFreezeReplay:
@@ -54,7 +50,7 @@ class OracleFreezeReplay:
 
     Curator interpretation: an oracle stuck at a stale price during a fast
     market move is the most common pre-liquidation failure mode. With the
-    oracle stuck, liquidators see no signal — but the *true* solvency of
+    oracle stuck, liquidators see no signal - but the *true* solvency of
     the position has degraded. A position becomes **uneconomic to liquidate
     even when the oracle eventually updates** when the true LTV exceeds
     `1 / (1 + LIF)` (typically ~0.952 at 5% LIF), because the seized
@@ -66,7 +62,7 @@ class OracleFreezeReplay:
       drift_pct: signed collateral price drift while oracle is stale.
         Negative for downside scenarios (the common case); positive
         rejected because positive drift cannot create bad debt.
-      bad_debt_lif: Morpho Liquidation Incentive Factor — bonus paid to
+      bad_debt_lif: Morpho Liquidation Incentive Factor - bonus paid to
         the liquidator on seized collateral. Default 0.05 (the typical
         major-asset LIF on Morpho Blue); set per-market for safer assets.
     """
@@ -119,8 +115,8 @@ class OracleFreezeReplay:
             interpretation=(
                 f"If the oracle freezes while collateral drifts {self.drift_pct:+.0%}, "
                 f"{fraction:.1%} of outstanding debt ({bad_debt_positions} {pos_word}) "
-                f"crosses the bad-debt frontier — LTV > {bad_debt_ltv:.3f} at "
-                f"LIF {self.bad_debt_lif:.0%} — meaning seized collateral could not "
+                f"crosses the bad-debt frontier - LTV > {bad_debt_ltv:.3f} at "
+                f"LIF {self.bad_debt_lif:.0%} - meaning seized collateral could not "
                 f"cover debt-plus-incentive even once the oracle updates."
             ),
             evidence={
@@ -135,9 +131,7 @@ class OracleFreezeReplay:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────
-# 2. Collateral cascade
-# ──────────────────────────────────────────────────────────────────────
+# --- 2. Collateral cascade ---
 
 
 class CollateralCascade:
@@ -208,9 +202,7 @@ class CollateralCascade:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────
-# 3. Top depositor exit shock
-# ──────────────────────────────────────────────────────────────────────
+# --- 3. Top depositor exit shock ---
 
 
 class DepositorExitShock:
@@ -250,7 +242,7 @@ class DepositorExitShock:
             headline_unit="fraction_rationed",
             interpretation=(
                 f"If top-{self.top_n} depositor(s) exit, demand is {exit_demand:,} "
-                f"vs idle supply {idle_supply:,} → {fraction_rationed:.1%} would be "
+                f"vs idle supply {idle_supply:,} -> {fraction_rationed:.1%} would be "
                 f"queue-rationed until borrowers repay."
             ),
             evidence={
@@ -263,14 +255,12 @@ class DepositorExitShock:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────
-# 4. Utilization inversion
-# ──────────────────────────────────────────────────────────────────────
+# --- 4. Utilization inversion ---
 
 
 class UtilizationInversion:
     """Highlights markets where utilization is already above the curator's
-    target band — a precursor to interest-rate spirals and rationing.
+    target band - a precursor to interest-rate spirals and rationing.
     """
 
     def __init__(self, target_util_max: float = 0.92):
@@ -286,7 +276,7 @@ class UtilizationInversion:
             headline_unit="fraction_markets_above_target",
             interpretation=(
                 f"{len(breached)} / {len(snapshot.markets)} markets are above the "
-                f"{self.target_util_max:.0%} utilization band — IRM curves enter the "
+                f"{self.target_util_max:.0%} utilization band - IRM curves enter the "
                 f"steep regime; depositor withdrawal pressure compounds."
             ),
             evidence={
@@ -298,9 +288,7 @@ class UtilizationInversion:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────
-# 5. Liquidation latency
-# ──────────────────────────────────────────────────────────────────────
+# --- 5. Liquidation latency ---
 
 
 class LiquidationLatency:
@@ -316,7 +304,7 @@ class LiquidationLatency:
       gas_price_gwei: assumed gas price in gwei.
       liquidation_gas: gas units per liquidation call (Morpho Blue ~350k).
       eth_price_usd: ETH price for the gas-cost USD conversion.
-      lif: Liquidation Incentive Factor — bonus paid to liquidator.
+      lif: Liquidation Incentive Factor - bonus paid to liquidator.
       loan_decimals: decimals of the vault's loan asset. Default 6 (USDC).
       loan_price_usd: USD price of the loan asset. Default 1.0 (stablecoin
         vaults). Override for WETH-/DAI-denominated vaults.
@@ -372,7 +360,7 @@ class LiquidationLatency:
                 f"At {self.gas_price_gwei:.0f} gwei and ETH ${self.eth_price_usd:.0f}, "
                 f"liquidation cost is ~${cost_usd:.2f}; "
                 f"{fraction:.1%} of debt sits in {unprofitable_count} {pos_word} where "
-                f"liquidator profit (debt × {self.lif:.0%}) is below cost — these accrue "
+                f"liquidator profit (debt × {self.lif:.0%}) is below cost - these accrue "
                 f"bad-debt risk during oracle-shock windows."
             ),
             evidence={
@@ -389,9 +377,7 @@ class LiquidationLatency:
         )
 
 
-# ──────────────────────────────────────────────────────────────────────
-# 6. LTV distribution stress
-# ──────────────────────────────────────────────────────────────────────
+# --- 6. LTV distribution stress ---
 
 
 class LTVDistributionStress:
@@ -422,11 +408,8 @@ class LTVDistributionStress:
                 headline_metric=0.0,
                 headline_unit="fraction_debt_within_5pp_of_lltv",
                 interpretation=(
-                    "No borrower positions in the snapshot — LTV distribution "
-                    "is undefined. (Live MetaMorpho fetches via the public Blue "
-                    "API do not currently include individual borrower positions; "
-                    "this detector reads zero on live snapshots until a subgraph "
-                    "fetch is wired in.)"
+                    "No borrower positions in the snapshot - LTV distribution "
+                    "is undefined, so this detector reads zero."
                 ),
                 evidence={"n_positions": 0},
             )

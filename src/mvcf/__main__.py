@@ -34,7 +34,7 @@ from .runner import run_all_detectors, summarize
 
 
 def _list_fixtures() -> list[str]:
-    """Available offline fixture names — used in error messages."""
+    """Available offline fixture names - used in error messages."""
     fixtures_dir = Path(__file__).resolve().parent.parent.parent / "data" / "fixtures"
     if not fixtures_dir.exists():
         return []
@@ -63,7 +63,7 @@ def _cmd_analyze(args: argparse.Namespace) -> int:
         )
         return 2
     except Exception as e:
-        print(f"error: failed to load snapshot — {e}", file=sys.stderr)
+        print(f"error: failed to load snapshot - {e}", file=sys.stderr)
         return 2
 
     try:
@@ -76,7 +76,7 @@ def _cmd_analyze(args: argparse.Namespace) -> int:
             gas_gwei=args.gas_gwei,
         )
     except ValueError as e:
-        print(f"error: invalid detector parameter — {e}", file=sys.stderr)
+        print(f"error: invalid detector parameter - {e}", file=sys.stderr)
         return 2
 
     if args.format == "text":
@@ -94,7 +94,7 @@ def _cmd_analyze(args: argparse.Namespace) -> int:
     if args.output:
         with open(args.output, "w") as f:
             f.write(out)
-        print(f"  ✓ wrote {args.output}", file=sys.stderr)
+        print(f"  wrote {args.output}", file=sys.stderr)
     else:
         print(out)
     return 0
@@ -112,7 +112,7 @@ def _cmd_sweep(args: argparse.Namespace) -> int:
 
     if args.kind == "collateral":
         values = [float(s.strip()) for s in args.shocks.split(",")]
-        print(f"Collateral cascade sweep on {snap.vault_address[:10]}…  (block {snap.block})\n")
+        print(f"Collateral cascade sweep on {snap.vault_address[:10]}...  (block {snap.block})\n")
         print(f"  {'shock':>8}  {'liquidatable_debt':>20}  {'liquidity_gap':>15}")
         for shock in values:
             res = CollateralCascade(shock_pct=shock).run(snap)
@@ -123,7 +123,7 @@ def _cmd_sweep(args: argparse.Namespace) -> int:
             )
     elif args.kind == "oracle":
         values = [float(s.strip()) for s in args.shocks.split(",")]
-        print(f"Oracle freeze sweep on {snap.vault_address[:10]}…  (block {snap.block})\n")
+        print(f"Oracle freeze sweep on {snap.vault_address[:10]}...  (block {snap.block})\n")
         print(f"  {'drift':>8}  {'bad_debt_frac':>15}  {'bad_debt_positions':>20}")
         for drift in values:
             res = OracleFreezeReplay(drift_pct=drift).run(snap)
@@ -155,13 +155,13 @@ def _cmd_compare(args: argparse.Namespace) -> int:
         rows.append((snap, {r.name: r.headline_metric for r in results}))
 
     # Pretty-print table
-    addrs = [s.vault_address[:6] + "…" + s.vault_address[-4:] for s, _ in rows]
+    addrs = [s.vault_address[:6] + "..." + s.vault_address[-4:] for s, _ in rows]
     detectors = list(rows[0][1].keys())
     col_w = max(20, max(len(d) for d in detectors))
     addr_w = max(15, max(len(a) for a in addrs) + 2)
 
     print(f"\n{'Detector':<{col_w}}" + "".join(f"{a:>{addr_w}}" for a in addrs))
-    print("─" * (col_w + addr_w * len(addrs)))
+    print("-" * (col_w + addr_w * len(addrs)))
     for d in detectors:
         row = f"{d:<{col_w}}"
         for _, metrics in rows:

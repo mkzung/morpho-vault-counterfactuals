@@ -1,10 +1,12 @@
 {
-  "_comment": "Edge-case fixture — a small distressed vault with a single market, three borrowers, top-1 depositor at >50%, utilization >95%. Used to verify detectors handle the corner cases curators actually call alerting on (concentrated depositor, hot utilization, multiple positions at LLTV).",
+  "_comment": "Edge-case fixture - a small distressed vault with a single market, three borrowers, top-1 depositor at >50%, utilization >95%. Used to verify detectors handle the corner cases curators actually call alerting on (concentrated depositor, hot utilization, multiple positions at LLTV).",
   "vault_address": "0xDEAD000000000000000000000000000000000001",
   "block": 19500001,
   "timestamp": 1716000060,
   "total_assets": 5000000000000,
   "total_shares": 5000000000000,
+  "loan_symbol": "USDC",
+  "loan_decimals": 6,
   "top_depositors": [
     ["0xaaaa000000000000000000000000000000000001", 3000000000000],
     ["0xaaaa000000000000000000000000000000000002", 1000000000000],

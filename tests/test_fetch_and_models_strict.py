@@ -24,9 +24,9 @@ from mvcf.fetch import _parse_response, fetch_vault_snapshot, load_history
 from mvcf.state import BorrowerPosition, MarketState, VaultSnapshot
 from mvcf.synthetic import generate_synthetic_vault
 
-# ──────────────────────────────────────────────────────────────────
-# extra="forbid" — typo'd fixture keys must fail loudly
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
+# extra="forbid" - typo'd fixture keys must fail loudly
+# ------------------------------------------------------------------
 
 
 def test_market_state_rejects_unknown_field():
@@ -72,9 +72,9 @@ def test_vault_snapshot_rejects_unknown_field():
         )
 
 
-# ──────────────────────────────────────────────────────────────────
-# Oracle price zero → market skipped with warning (no silent 1)
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
+# Oracle price zero -> market skipped with warning (no silent 1)
+# ------------------------------------------------------------------
 
 
 def _vault_payload(*, oracle_price: int) -> dict:
@@ -135,9 +135,9 @@ def test_parse_response_keeps_nonzero_oracle_price():
     assert snap.markets[0].oracle_price_36dec == 10**36
 
 
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 # GraphQL `errors` array surfaces with diagnostic context
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 
 
 def test_fetch_raises_on_graphql_errors(monkeypatch):
@@ -154,9 +154,9 @@ def test_fetch_raises_on_graphql_errors(monkeypatch):
         fetch_vault_snapshot("0xVault")
 
 
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 # Retry on 429 / 5xx with bounded backoff
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 
 
 def test_fetch_retries_on_500_then_succeeds(monkeypatch):
@@ -170,10 +170,12 @@ def test_fetch_retries_on_500_then_succeeds(monkeypatch):
         return httpx.Response(200, json=_vault_payload(oracle_price=10**36), request=req)
 
     monkeypatch.setattr(httpx.Client, "post", fake_post)
-    # Speed up the test — patch time.sleep to a no-op.
+    # Speed up the test - patch time.sleep to a no-op.
     monkeypatch.setattr("mvcf.fetch.time.sleep", lambda *_: None)
 
-    snap = fetch_vault_snapshot("0xVault")
+    # fetch_positions=False isolates the vault-query retry (position
+    # enrichment would add its own POSTs through the same mocked transport).
+    snap = fetch_vault_snapshot("0xVault", fetch_positions=False)
     assert calls["n"] == 3
     assert snap.total_assets == 1_000_000_000
 
@@ -195,9 +197,9 @@ def test_fetch_retries_exhaust_and_raises(monkeypatch):
     assert calls["n"] == 4
 
 
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 # load_history directory layout
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 
 
 def test_load_history_directory_layout(tmp_path, monkeypatch):
@@ -235,9 +237,9 @@ def test_load_history_missing_raises():
         load_history("definitely_does_not_exist_v05")
 
 
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 # Synthetic depositor address uniqueness
-# ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------
 
 
 def test_synthetic_depositors_are_unique():
