@@ -12,7 +12,7 @@ make install                # pip install -e ".[dev]"
 make all                    # ruff + mypy + pytest
 ```
 
-Pre-commit hooks are configured — install once with `pre-commit install` so
+Pre-commit hooks are configured - install once with `pre-commit install` so
 `ruff` and `mypy` run on every commit.
 
 ## Adding a new detector
@@ -39,7 +39,7 @@ Fixtures live under `data/fixtures/*.json` and follow the schema in
 36-decimal convention:
 
 ```
-price = real_price × 10^(36 + loan_decimals − collateral_decimals)
+price = real_price × 10^(36 + loan_decimals - collateral_decimals)
 ```
 
 Test the fixture loads cleanly and that each detector produces a sensible

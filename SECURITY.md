@@ -28,7 +28,7 @@ snapshots for reference; no patch backports.
 
 ## Out of scope
 
-- Anything in `data/fixtures/*.json` — these are illustrative synthetic
+- Anything in `data/fixtures/*.json` - these are illustrative synthetic
   values, not authoritative on-chain data.
 - The Chart.js CDN load in HTML reports. Pin the version locally if your
   environment requires it.

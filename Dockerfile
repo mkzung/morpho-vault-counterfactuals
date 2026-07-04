@@ -1,4 +1,4 @@
-# Slim, single-stage Dockerfile — for reproducible CLI invocations.
+# Slim, single-stage Dockerfile - for reproducible CLI invocations.
 #
 # Usage:
 #   docker build -t mvcf .

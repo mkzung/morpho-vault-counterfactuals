@@ -22,7 +22,7 @@ format:
 typecheck:
 	mypy src/mvcf
 
-# Demo targets — rebuild the committed sample reports under docs/.
+# Demo targets - rebuild the committed sample reports under docs/.
 demo:
 	mvcf analyze --fixture steakhouse_usdc_snapshot_demo
 

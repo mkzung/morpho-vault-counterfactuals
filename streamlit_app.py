@@ -6,7 +6,7 @@ Run locally:
 
 Curator workflow: pick a fixture (or paste a vault address for live fetch),
 adjust the detector parameters in the sidebar, see metrics update live.
-This is the same content as the HTML report but interactive — for the
+This is the same content as the HTML report but interactive - for the
 weekly curator review session where you sweep parameters by hand.
 """
 
@@ -30,17 +30,17 @@ from mvcf.detectors import CollateralCascade, OracleFreezeReplay  # noqa: E402
 
 st.set_page_config(
     page_title="Morpho Vault Counterfactuals",
-    page_icon="🏛",
+    page_icon="",
     layout="wide",
 )
 
-st.title("Morpho MetaMorpho — counterfactual risk monitor")
+st.title("Morpho MetaMorpho - counterfactual risk monitor")
 st.caption(
     "Pure-function counterfactual detectors on a Morpho vault snapshot. "
     "Adjust parameters in the sidebar; metrics update live."
 )
 
-# ── Sidebar: source + parameters ──
+# -- Sidebar: source + parameters --
 with st.sidebar:
     st.header("Snapshot source")
     source = st.radio("Source", ["Fixture", "Live (Morpho Blue API)"], index=0)
@@ -54,7 +54,7 @@ with st.sidebar:
             return load_fixture(fixture_name)
     else:
         vault_addr = st.text_input(
-            "Vault address (0x…)",
+            "Vault address (0x...)",
             value="0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
         )
 
@@ -69,7 +69,7 @@ with st.sidebar:
     util_band = st.slider("Utilization band (%)", 80, 99, 92) / 100
     gas_gwei = st.slider("Gas price (gwei)", 5, 200, 30)
 
-# ── Main: snapshot summary + detector metrics ──
+# -- Main: snapshot summary + detector metrics --
 try:
     snap = snap_loader()
 except Exception as e:
@@ -97,14 +97,14 @@ for i, r in enumerate(results):
     with cols[i % 3]:
         st.metric(r.name, f"{r.headline_metric:.1%}", help=r.interpretation)
 
-# ── Sweep charts ──
+# -- Sweep charts --
 st.subheader("Sensitivity sweeps")
 import pandas as pd  # noqa: E402
 
 c1, c2 = st.columns(2)
 
 with c1:
-    st.markdown("**Collateral cascade — % liquidatable vs shock**")
+    st.markdown("**Collateral cascade - % liquidatable vs shock**")
     shocks = [-0.02, -0.05, -0.10, -0.15, -0.20, -0.25, -0.30, -0.40, -0.50]
     cascade_df = pd.DataFrame(
         {
@@ -118,7 +118,7 @@ with c1:
     st.line_chart(cascade_df.set_index("shock"))
 
 with c2:
-    st.markdown("**Oracle freeze — % bad debt vs drift**")
+    st.markdown("**Oracle freeze - % bad debt vs drift**")
     drifts = [-0.02, -0.05, -0.10, -0.15, -0.20, -0.25]
     oracle_df = pd.DataFrame(
         {
@@ -130,14 +130,14 @@ with c2:
     )
     st.line_chart(oracle_df.set_index("drift"))
 
-# ── Per-detector deep-dive ──
+# -- Per-detector deep-dive --
 st.subheader("Per-detector findings")
 for r in results:
-    with st.expander(f"{r.name} — {r.headline_metric:.1%}"):
+    with st.expander(f"{r.name} - {r.headline_metric:.1%}"):
         st.write(r.interpretation)
         st.json(r.evidence)
 
-# ── Optional diff against another fixture ──
+# -- Optional diff against another fixture --
 st.divider()
 with st.expander("Compare to another snapshot (diff)"):
     other_name = st.selectbox(
@@ -153,7 +153,7 @@ with st.expander("Compare to another snapshot (diff)"):
         else:
             st.warning(
                 f"Cannot diff: vault addresses differ "
-                f"({other.vault_address[:8]}… vs {snap.vault_address[:8]}…)"
+                f"({other.vault_address[:8]}... vs {snap.vault_address[:8]}...)"
             )
 
 st.caption(

@@ -58,7 +58,7 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unreachable = true
 check_untyped_defs = true
-disallow_untyped_defs = false   # gradual typing — set true once docstrings + tests caught up
+disallow_untyped_defs = false   # gradual typing - set true once docstrings + tests caught up
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

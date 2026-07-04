@@ -22,7 +22,7 @@ keywords:
   - python
 abstract: >-
   A Python framework that runs six counterfactual stress-test detectors
-  against Morpho MetaMorpho vault snapshots — oracle freeze replay,
+  against Morpho MetaMorpho vault snapshots - oracle freeze replay,
   collateral cascade, top-depositor exit shock, utilization inversion,
   liquidation latency, and LTV distribution stress. Designed as the
   curator-side counterfactual complement to the official
