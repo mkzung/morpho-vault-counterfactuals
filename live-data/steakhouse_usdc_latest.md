@@ -1,18 +1,18 @@
 # Vault risk brief: `0xBEEF...64CB`
 
 - **Block:** n/a (Blue API response is not block-pinned)
-- **Total assets:** 95.16M USDC (`95,164,996,375,187` USDC units)
+- **Total assets:** 94.56M USDC (`94,558,714,903,673` USDC units)
 - **Markets:** 9
-- **Borrowers analyzed:** 1,000 (largest by debt; API max 1000/query), covering 100.0% of the 403.32M USDC of open debt in the markets this vault lends into.
+- **Borrowers analyzed:** 1,000 (largest by debt; API max 1000/query), covering 100.0% of the 403.67M USDC of open debt in the markets this vault lends into.
   Borrower positions are *market-wide*: a MetaMorpho vault supplies into shared Morpho Blue markets, so these are all borrowers of those markets, not only debt funded by this vault. That is why market debt can exceed the vault's own assets.
-- **HHI (depositor concentration):** `0.180` (top-1 = 36.5%)
+- **HHI (depositor concentration):** `0.179` (top-1 = 36.7%)
 
 ## Headline counterfactual risk
 
 | Detector | Metric | Unit |
 |---|---:|---|
 | `OracleFreezeReplay` | `0.000` | fraction_bad_debt |
-| `CollateralCascade` | `0.070` | fraction_liquidatable_debt |
+| `CollateralCascade` | `0.069` | fraction_liquidatable_debt |
 | `DepositorExitShock` | `0.000` | fraction_rationed |
 | `UtilizationInversion` | `0.000` | fraction_markets_above_target |
 | `LiquidationLatency` | `0.000` | fraction_unprofitable_to_liquidate |
@@ -32,7 +32,7 @@ If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 
   "bad_debt_lif": 0.05,
   "bad_debt_frontier_ltv": 0.9523809523809523,
   "bad_debt_assets": 0,
-  "total_debt_assets": 403297072885694,
+  "total_debt_assets": 403643179848389,
   "bad_debt_positions": 0,
   "per_market": {}
 }
@@ -42,51 +42,51 @@ If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (0 
 
 ### CollateralCascade
 
-At a -20% collateral shock, 7.0% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 4,114,856,771,469 loan-asset units across affected markets.
+At a -20% collateral shock, 6.9% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 4,046,890,065,058 loan-asset units across affected markets.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
   "shock_pct": -0.2,
-  "liquidatable_debt_assets": 28384190546556,
-  "total_debt_assets": 403297072885694,
-  "liquidity_gap": 4114856771469,
+  "liquidatable_debt_assets": 28005771640109,
+  "total_debt_assets": 403643179848389,
+  "liquidity_gap": 4046890065058,
   "per_market": {
     "0x3a85e619751152991742810df6ec69ce473daef99e28a64ab2340d7b7ccfee49": {
-      "liquidatable_debt": 22239942898605,
-      "available_liquidity": 18329937197356,
-      "liquidity_gap": 3910005701249
+      "liquidatable_debt": 21887824807137,
+      "available_liquidity": 18045539334327,
+      "liquidity_gap": 3842285472810
     },
     "0x64d65c9a2d91c36d56fbc42d69e979335320169b3df63bf92789e2c8883fcc64": {
-      "liquidatable_debt": 4645055500367,
-      "available_liquidity": 40592867453662,
+      "liquidatable_debt": 4647516307419,
+      "available_liquidity": 42168382373770,
       "liquidity_gap": 0
     },
     "0x7e585a933ffe8443c371b4f8cfeb4430f5f6a14c2f32a898c26662c67a1cb8b8": {
-      "liquidatable_debt": 549704719540,
-      "available_liquidity": 698400911669,
+      "liquidatable_debt": 551225051475,
+      "available_liquidity": 714317392391,
       "liquidity_gap": 0
     },
     "0xb323495f7e4148be5643a4ea4a8221eef163e4bccfdedc2a6f4696baacbc86cc": {
-      "liquidatable_debt": 600697959211,
-      "available_liquidity": 4281311662707,
+      "liquidatable_debt": 605757394041,
+      "available_liquidity": 4407710563269,
       "liquidity_gap": 0
     },
     "0xc498f4bfdda99e60ea8eb04c1e145654a70bc59da76ef9c6ed54a1314d78e5b5": {
-      "liquidatable_debt": 265153927220,
+      "liquidatable_debt": 265179843395,
       "available_liquidity": 75899091000,
-      "liquidity_gap": 189254836220
-    },
-    "0x94b823e6bd8ea533b4e33fbc307faea0b307301bc48763acc4d4aa4def7636cd": {
-      "liquidatable_debt": 56023159946,
-      "available_liquidity": 511028915520,
-      "liquidity_gap": 0
+      "liquidity_gap": 189280752395
     },
     "0xbc99de6a88904cd0e69042ad6f266e63182801f030c636507c3caf590ffd84fe": {
-      "liquidatable_debt": 27612381667,
-      "available_liquidity": 12016147667,
-      "liquidity_gap": 15596234000
+      "liquidatable_debt": 27615071857,
+      "available_liquidity": 12291232004,
+      "liquidity_gap": 15323839853
+    },
+    "0x94b823e6bd8ea533b4e33fbc307faea0b307301bc48763acc4d4aa4def7636cd": {
+      "liquidatable_debt": 20653164785,
+      "available_liquidity": 527398553381,
+      "liquidity_gap": 0
     }
   }
 }
@@ -96,17 +96,17 @@ At a -20% collateral shock, 7.0% of debt becomes liquidatable; liquidity gap (de
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 34,756,527,311,305 vs idle supply 65,655,038,477,157 -> 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 34,708,870,795,038 vs idle supply 67,126,457,400,455 -> 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
   "top_n": 1,
-  "exit_demand_loan_assets": 34756527311305,
-  "idle_supply_loan_assets": 65655038477157,
+  "exit_demand_loan_assets": 34708870795038,
+  "idle_supply_loan_assets": 67126457400455,
   "rationing_gap": 0,
-  "hhi": 0.17956229746795832
+  "hhi": 0.1794156423056077
 }
 ```
 
@@ -129,7 +129,7 @@ If top-1 depositor(s) exit, demand is 34,756,527,311,305 vs idle supply 65,655,0
 
 ### LiquidationLatency
 
-At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 18 positions where liquidator profit (debt × 5%) is below cost - these accrue bad-debt risk during oracle-shock windows.
+At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 15 positions where liquidator profit (debt × 5%) is below cost - these accrue bad-debt risk during oracle-shock windows.
 
 <details><summary>Evidence</summary>
 
@@ -141,9 +141,9 @@ At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 18 p
   "loan_decimals": 6,
   "loan_price_usd": 1.0,
   "cost_per_liquidation_usd": 36.75,
-  "unprofitable_positions": 18,
-  "unprofitable_debt_assets": 11604910864,
-  "total_debt_assets": 403297072885694
+  "unprofitable_positions": 15,
+  "unprofitable_debt_assets": 9819351143,
+  "total_debt_assets": 403643179848389
 }
 ```
 
@@ -151,17 +151,17 @@ At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 18 p
 
 ### LTVDistributionStress
 
-0.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 75.71%. A small adverse oracle move would push this debt into liquidation.
+0.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 75.68%. A small adverse oracle move would push this debt into liquidation.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
-  "top_5pct_ltv_avg": 0.7571003304529894,
-  "median_ltv": 0.5307008335231665,
+  "top_5pct_ltv_avg": 0.7568129307825301,
+  "median_ltv": 0.5286161835675385,
   "n_positions": 1000,
-  "near_lltv_debt": 0,
-  "total_debt_assets": 403297072885694
+  "near_lltv_debt": 36041653433,
+  "total_debt_assets": 403643179848389
 }
 ```
 
