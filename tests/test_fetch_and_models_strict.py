@@ -85,7 +85,6 @@ def _vault_payload(*, oracle_price: int) -> dict:
                 "state": {
                     "totalAssets": "1000000000",
                     "totalSupply": "1000000000",
-                    "lastTotalAssets": "1000000000",
                     "allocation": [
                         {
                             "market": {

@@ -73,7 +73,6 @@ def fetch_vault_snapshot(
         state {
           totalAssets
           totalSupply
-          lastTotalAssets
           allocation {
             market {
               marketId
