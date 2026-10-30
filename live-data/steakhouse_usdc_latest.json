@@ -4,29 +4,29 @@
   "timestamp": 0,
   "loan_symbol": "USDC",
   "loan_decimals": 6,
-  "total_assets_loan_units": 64240652627643,
-  "total_assets_human": "64.24M USDC",
-  "hhi": 0.2417987646610342,
-  "top1_share": 0.4628885170708448,
+  "total_assets_loan_units": 63270889037162,
+  "total_assets_human": "63.27M USDC",
+  "hhi": 0.23377762367993746,
+  "top1_share": 0.452717345440868,
   "n_markets": 11,
   "n_borrowers": 1000,
-  "borrower_debt_coverage": 0.999641377668436,
+  "borrower_debt_coverage": 0.9993129094605394,
   "detectors": [
     {
       "name": "OracleFreezeReplay",
-      "headline_metric": 0.0003438036736721225,
+      "headline_metric": 0.0005047030880296072,
       "headline_unit": "fraction_bad_debt",
-      "interpretation": "If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (2 positions) crosses the bad-debt frontier - LTV > 0.952 at LIF 5% - meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.",
+      "interpretation": "If the oracle freezes while collateral drifts -10%, 0.1% of outstanding debt (2 positions) crosses the bad-debt frontier - LTV > 0.952 at LIF 5% - meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.",
       "evidence": {
         "drift_pct": -0.1,
         "bad_debt_lif": 0.05,
         "bad_debt_frontier_ltv": 0.9523809523809523,
-        "bad_debt_assets": 184093051036,
-        "total_debt_assets": 535459813648080,
+        "bad_debt_assets": 184118459383,
+        "total_debt_assets": 364805494061489,
         "bad_debt_positions": 2,
         "per_market": {
           "0xc498f4bfdda99e60ea8eb04c1e145654a70bc59da76ef9c6ed54a1314d78e5b5": {
-            "bad_debt_assets": 184093051036,
+            "bad_debt_assets": 184118459383,
             "count": 2
           }
         }
@@ -34,53 +34,58 @@
     },
     {
       "name": "CollateralCascade",
-      "headline_metric": 0.10148978632497954,
+      "headline_metric": 0.1997171738742306,
       "headline_unit": "fraction_liquidatable_debt",
-      "interpretation": "At a -20% collateral shock, 10.1% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 23,708,181,270,491 loan-asset units across affected markets.",
+      "interpretation": "At a -20% collateral shock, 20.0% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 13,327,925,348,296 loan-asset units across affected markets.",
       "evidence": {
         "shock_pct": -0.2,
-        "liquidatable_debt_assets": 54343702072757,
-        "total_debt_assets": 535459813648080,
-        "liquidity_gap": 23708181270491,
+        "liquidatable_debt_assets": 72857922287753,
+        "total_debt_assets": 364805494061489,
+        "liquidity_gap": 13327925348296,
         "per_market": {
           "0x3a85e619751152991742810df6ec69ce473daef99e28a64ab2340d7b7ccfee49": {
-            "liquidatable_debt": 21783238243473,
-            "available_liquidity": 12800156616669,
-            "liquidity_gap": 8983081626804
-          },
-          "0x7e585a933ffe8443c371b4f8cfeb4430f5f6a14c2f32a898c26662c67a1cb8b8": {
-            "liquidatable_debt": 5659059519344,
-            "available_liquidity": 1250969756673,
-            "liquidity_gap": 4408089762671
-          },
-          "0xc498f4bfdda99e60ea8eb04c1e145654a70bc59da76ef9c6ed54a1314d78e5b5": {
-            "liquidatable_debt": 10837793189985,
-            "available_liquidity": 1194969952850,
-            "liquidity_gap": 9642823237135
+            "liquidatable_debt": 25903856726376,
+            "available_liquidity": 24162606293787,
+            "liquidity_gap": 1741250432589
           },
           "0x64d65c9a2d91c36d56fbc42d69e979335320169b3df63bf92789e2c8883fcc64": {
-            "liquidatable_debt": 12788364428080,
-            "available_liquidity": 34193026934471,
+            "liquidatable_debt": 27506266400443,
+            "available_liquidity": 29527731488345,
             "liquidity_gap": 0
           },
+          "0x7e585a933ffe8443c371b4f8cfeb4430f5f6a14c2f32a898c26662c67a1cb8b8": {
+            "liquidatable_debt": 5523364363389,
+            "available_liquidity": 2504841071042,
+            "liquidity_gap": 3018523292347
+          },
+          "0xc498f4bfdda99e60ea8eb04c1e145654a70bc59da76ef9c6ed54a1314d78e5b5": {
+            "liquidatable_debt": 10839289011864,
+            "available_liquidity": 2271137388504,
+            "liquidity_gap": 8568151623360
+          },
           "0xb323495f7e4148be5643a4ea4a8221eef163e4bccfdedc2a6f4696baacbc86cc": {
-            "liquidatable_debt": 1586129344707,
-            "available_liquidity": 3290997164813,
+            "liquidatable_debt": 1370895179973,
+            "available_liquidity": 6234528011902,
             "liquidity_gap": 0
           },
           "0x94b823e6bd8ea533b4e33fbc307faea0b307301bc48763acc4d4aa4def7636cd": {
-            "liquidatable_debt": 1503365864437,
-            "available_liquidity": 897730774302,
-            "liquidity_gap": 605635090135
+            "liquidatable_debt": 1523297737059,
+            "available_liquidity": 1556755842221,
+            "liquidity_gap": 0
           },
           "0xbc99de6a88904cd0e69042ad6f266e63182801f030c636507c3caf590ffd84fe": {
-            "liquidatable_debt": 179811010276,
-            "available_liquidity": 111259456530,
-            "liquidity_gap": 68551553746
+            "liquidatable_debt": 179835523885,
+            "available_liquidity": 181393452617,
+            "liquidity_gap": 0
           },
           "0x09dc9e7eb5d8fc54b2bc41d1135fd4e99057a580f680321faeb90c7a21e631c1": {
-            "liquidatable_debt": 5940472455,
-            "available_liquidity": 156931400445,
+            "liquidatable_debt": 5670918392,
+            "available_liquidity": 308121286324,
+            "liquidity_gap": 0
+          },
+          "0x85252bb8485c99bba46fe149c7dd2aad83672640f53c630890673cf1848ba16e": {
+            "liquidatable_debt": 5446426372,
+            "available_liquidity": 2760769617511,
             "liquidity_gap": 0
           }
         }
@@ -90,23 +95,32 @@
       "name": "DepositorExitShock",
       "headline_metric": 0.0,
       "headline_unit": "fraction_rationed",
-      "interpretation": "If top-1 depositor(s) exit, demand is 29,736,260,430,472 vs idle supply 59,068,184,246,016 -> 0.0% would be queue-rationed until borrowers repay.",
+      "interpretation": "If top-1 depositor(s) exit, demand is 28,643,828,928,587 vs idle supply 69,507,952,909,288 -> 0.0% would be queue-rationed until borrowers repay.",
       "evidence": {
         "top_n": 1,
-        "exit_demand_loan_assets": 29736260430472,
-        "idle_supply_loan_assets": 59068184246016,
+        "exit_demand_loan_assets": 28643828928587,
+        "idle_supply_loan_assets": 69507952909288,
         "rationing_gap": 0,
-        "hhi": 0.2417987646610342
+        "hhi": 0.23377762367993746
       }
     },
     {
       "name": "UtilizationInversion",
-      "headline_metric": 0.0,
+      "headline_metric": 0.18181818181818182,
       "headline_unit": "fraction_markets_above_target",
-      "interpretation": "0 / 11 markets are above the 92% utilization band - IRM curves enter the steep regime; depositor withdrawal pressure compounds.",
+      "interpretation": "2 / 11 markets are above the 92% utilization band - IRM curves enter the steep regime; depositor withdrawal pressure compounds.",
       "evidence": {
         "target_util_max": 0.92,
-        "breached_markets": []
+        "breached_markets": [
+          {
+            "market_id": "0x85252bb8485c99bba46fe149c7dd2aad83672640f53c630890673cf1848ba16e",
+            "utilization": 0.9299400268061866
+          },
+          {
+            "market_id": "0x34377fc4f617c51818e92c79df31ff270c6a91bc94ad32e367fdf59b9f4ac5dd",
+            "utilization": 0.9960136126972488
+          }
+        ]
       }
     },
     {
@@ -123,20 +137,20 @@
         "cost_per_liquidation_usd": 36.75,
         "unprofitable_positions": 0,
         "unprofitable_debt_assets": 0,
-        "total_debt_assets": 535459813648080
+        "total_debt_assets": 364805494061489
       }
     },
     {
       "name": "LTVDistributionStress",
-      "headline_metric": 0.0006750944033263703,
+      "headline_metric": 0.0014685023066311146,
       "headline_unit": "fraction_debt_within_5pp_of_lltv",
-      "interpretation": "0.1% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 77.49%. A small adverse oracle move would push this debt into liquidation.",
+      "interpretation": "0.1% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 78.84%. A small adverse oracle move would push this debt into liquidation.",
       "evidence": {
-        "top_5pct_ltv_avg": 0.7749302715439847,
-        "median_ltv": 0.4722073274828605,
+        "top_5pct_ltv_avg": 0.7883604423796764,
+        "median_ltv": 0.4895883965706024,
         "n_positions": 1000,
-        "near_lltv_debt": 361485923400,
-        "total_debt_assets": 535459813648080
+        "near_lltv_debt": 535717709501,
+        "total_debt_assets": 364805494061489
       }
     }
   ]
