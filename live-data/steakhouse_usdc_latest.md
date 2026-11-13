@@ -1,22 +1,22 @@
 # Vault risk brief: `0xBEEF...64CB`
 
 - **Block:** n/a (Blue API response is not block-pinned)
-- **Total assets:** 66.60M USDC (`66,604,647,292,415` USDC units)
+- **Total assets:** 74.99M USDC (`74,992,014,769,058` USDC units)
 - **Markets:** 11
-- **Borrowers analyzed:** 1,000 (largest by debt; API max 1000/query), covering 100.0% of the 526.25M USDC of open debt in the markets this vault lends into.
+- **Borrowers analyzed:** 1,000 (largest by debt; API max 1000/query), covering 100.0% of the 519.31M USDC of open debt in the markets this vault lends into.
   Borrower positions are *market-wide*: a MetaMorpho vault supplies into shared Morpho Blue markets, so these are all borrowers of those markets, not only debt funded by this vault. That is why market debt can exceed the vault's own assets.
-- **HHI (depositor concentration):** `0.239` (top-1 = 45.6%)
+- **HHI (depositor concentration):** `0.198` (top-1 = 39.7%)
 
 ## Headline counterfactual risk
 
 | Detector | Metric | Unit |
 |---|---:|---|
 | `OracleFreezeReplay` | `0.000` | fraction_bad_debt |
-| `CollateralCascade` | `0.143` | fraction_liquidatable_debt |
+| `CollateralCascade` | `0.154` | fraction_liquidatable_debt |
 | `DepositorExitShock` | `0.000` | fraction_rationed |
 | `UtilizationInversion` | `0.091` | fraction_markets_above_target |
 | `LiquidationLatency` | `0.000` | fraction_unprofitable_to_liquidate |
-| `LTVDistributionStress` | `0.000` | fraction_debt_within_5pp_of_lltv |
+| `LTVDistributionStress` | `0.001` | fraction_debt_within_5pp_of_lltv |
 
 ## Per-detector findings
 
@@ -31,12 +31,12 @@ If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (2 
   "drift_pct": -0.1,
   "bad_debt_lif": 0.05,
   "bad_debt_frontier_ltv": 0.9523809523809523,
-  "bad_debt_assets": 185776690698,
-  "total_debt_assets": 525997701718649,
+  "bad_debt_assets": 185801457499,
+  "total_debt_assets": 519065047550072,
   "bad_debt_positions": 2,
   "per_market": {
     "0xc498f4bfdda99e60ea8eb04c1e145654a70bc59da76ef9c6ed54a1314d78e5b5": {
-      "bad_debt_assets": 185776690698,
+      "bad_debt_assets": 185801457499,
       "count": 2
     }
   }
@@ -47,60 +47,60 @@ If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (2 
 
 ### CollateralCascade
 
-At a -20% collateral shock, 14.3% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 30,170,241,623,882 loan-asset units across affected markets.
+At a -20% collateral shock, 15.4% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 27,791,332,892,879 loan-asset units across affected markets.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
   "shock_pct": -0.2,
-  "liquidatable_debt_assets": 75267532075261,
-  "total_debt_assets": 525997701718649,
-  "liquidity_gap": 30170241623882,
+  "liquidatable_debt_assets": 79985518147100,
+  "total_debt_assets": 519065047550072,
+  "liquidity_gap": 27791332892879,
   "per_market": {
-    "0x3a85e619751152991742810df6ec69ce473daef99e28a64ab2340d7b7ccfee49": {
-      "liquidatable_debt": 34100027090136,
-      "available_liquidity": 18443150483881,
-      "liquidity_gap": 15656876606255
-    },
     "0x64d65c9a2d91c36d56fbc42d69e979335320169b3df63bf92789e2c8883fcc64": {
-      "liquidatable_debt": 19317552607019,
-      "available_liquidity": 44204200878383,
+      "liquidatable_debt": 23783729756191,
+      "available_liquidity": 55960035239885,
       "liquidity_gap": 0
     },
+    "0x3a85e619751152991742810df6ec69ce473daef99e28a64ab2340d7b7ccfee49": {
+      "liquidatable_debt": 37519261344905,
+      "available_liquidity": 22854384099269,
+      "liquidity_gap": 14664877245636
+    },
     "0x7e585a933ffe8443c371b4f8cfeb4430f5f6a14c2f32a898c26662c67a1cb8b8": {
-      "liquidatable_debt": 5685962880586,
-      "available_liquidity": 1595880483660,
-      "liquidity_gap": 4090082396926
+      "liquidatable_debt": 5611846188001,
+      "available_liquidity": 1743957893341,
+      "liquidity_gap": 3867888294660
     },
     "0xc498f4bfdda99e60ea8eb04c1e145654a70bc59da76ef9c6ed54a1314d78e5b5": {
-      "liquidatable_debt": 10902261539047,
-      "available_liquidity": 1625731664686,
-      "liquidity_gap": 9276529874361
-    },
-    "0xbc99de6a88904cd0e69042ad6f266e63182801f030c636507c3caf590ffd84fe": {
-      "liquidatable_debt": 1620437590800,
-      "available_liquidity": 505785384361,
-      "liquidity_gap": 1114652206439
+      "liquidatable_debt": 11307891239247,
+      "available_liquidity": 2049323886664,
+      "liquidity_gap": 9258567352583
     },
     "0xb323495f7e4148be5643a4ea4a8221eef163e4bccfdedc2a6f4696baacbc86cc": {
-      "liquidatable_debt": 2335545960248,
-      "available_liquidity": 4113645758565,
+      "liquidatable_debt": 1698359198528,
+      "available_liquidity": 5200938047157,
       "liquidity_gap": 0
     },
     "0x94b823e6bd8ea533b4e33fbc307faea0b307301bc48763acc4d4aa4def7636cd": {
-      "liquidatable_debt": 1269186601370,
-      "available_liquidity": 1237086061469,
-      "liquidity_gap": 32100539901
+      "liquidatable_debt": 39724085890,
+      "available_liquidity": 1514838267429,
+      "liquidity_gap": 0
     },
-    "0x09dc9e7eb5d8fc54b2bc41d1135fd4e99057a580f680321faeb90c7a21e631c1": {
-      "liquidatable_debt": 20055924007,
-      "available_liquidity": 193082642174,
+    "0xbc99de6a88904cd0e69042ad6f266e63182801f030c636507c3caf590ffd84fe": {
+      "liquidatable_debt": 14107516078,
+      "available_liquidity": 427125969904,
       "liquidity_gap": 0
     },
     "0x85252bb8485c99bba46fe149c7dd2aad83672640f53c630890673cf1848ba16e": {
-      "liquidatable_debt": 16501882048,
-      "available_liquidity": 6279027393501,
+      "liquidatable_debt": 5459043693,
+      "available_liquidity": 6950785050226,
+      "liquidity_gap": 0
+    },
+    "0x09dc9e7eb5d8fc54b2bc41d1135fd4e99057a580f680321faeb90c7a21e631c1": {
+      "liquidatable_debt": 5139774567,
+      "available_liquidity": 231334194674,
       "liquidity_gap": 0
     }
   }
@@ -111,17 +111,17 @@ At a -20% collateral shock, 14.3% of debt becomes liquidatable; liquidity gap (d
 
 ### DepositorExitShock
 
-If top-1 depositor(s) exit, demand is 30,358,713,388,912 vs idle supply 78,198,288,309,249 -> 0.0% would be queue-rationed until borrowers repay.
+If top-1 depositor(s) exit, demand is 29,806,976,048,473 vs idle supply 96,933,505,864,518 -> 0.0% would be queue-rationed until borrowers repay.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
   "top_n": 1,
-  "exit_demand_loan_assets": 30358713388912,
-  "idle_supply_loan_assets": 78198288309249,
+  "exit_demand_loan_assets": 29806976048473,
+  "idle_supply_loan_assets": 96933505864518,
   "rationing_gap": 0,
-  "hhi": 0.23864124725279892
+  "hhi": 0.1982031131326274
 }
 ```
 
@@ -139,7 +139,7 @@ If top-1 depositor(s) exit, demand is 30,358,713,388,912 vs idle supply 78,198,2
   "breached_markets": [
     {
       "market_id": "0x34377fc4f617c51818e92c79df31ff270c6a91bc94ad32e367fdf59b9f4ac5dd",
-      "utilization": 0.9385685895256598
+      "utilization": 0.931631680328276
     }
   ]
 }
@@ -163,7 +163,7 @@ At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 0 po
   "cost_per_liquidation_usd": 36.75,
   "unprofitable_positions": 0,
   "unprofitable_debt_assets": 0,
-  "total_debt_assets": 525997701718649
+  "total_debt_assets": 519065047550072
 }
 ```
 
@@ -171,17 +171,17 @@ At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 0 po
 
 ### LTVDistributionStress
 
-0.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 79.60%. A small adverse oracle move would push this debt into liquidation.
+0.1% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 78.93%. A small adverse oracle move would push this debt into liquidation.
 
 <details><summary>Evidence</summary>
 
 ```json
 {
-  "top_5pct_ltv_avg": 0.7959572238349439,
-  "median_ltv": 0.5207104106510526,
+  "top_5pct_ltv_avg": 0.7893093733499243,
+  "median_ltv": 0.5331476290068163,
   "n_positions": 1000,
-  "near_lltv_debt": 140944053110,
-  "total_debt_assets": 525997701718649
+  "near_lltv_debt": 522102770656,
+  "total_debt_assets": 519065047550072
 }
 ```
 
