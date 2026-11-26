@@ -47,12 +47,12 @@
 <body>
 
 <h1>Vault risk brief: <code>0xBEEF...64CB</code></h1>
-<div class="sub">Generated 2026-11-25 17:14 UTC | block <code>n/a (not block-pinned)</code> | 10 markets | 1000 borrowers analyzed (99.9% of market debt)</div>
+<div class="sub">Generated 2026-11-26 16:55 UTC | block <code>n/a (not block-pinned)</code> | 10 markets | 1000 borrowers analyzed (99.9% of market debt)</div>
 
 <div class="meta">
-  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">71.94M USDC</div></div>
-  <div class="meta-card"><div class="meta-label">HHI</div><div class="meta-value">0.229</div></div>
-  <div class="meta-card"><div class="meta-label">Top-1 share</div><div class="meta-value">44.8%</div></div>
+  <div class="meta-card"><div class="meta-label">Total assets</div><div class="meta-value">59.19M USDC</div></div>
+  <div class="meta-card"><div class="meta-label">HHI</div><div class="meta-value">0.230</div></div>
+  <div class="meta-card"><div class="meta-label">Top-1 share</div><div class="meta-value">45.2%</div></div>
   <div class="meta-card"><div class="meta-label">Markets</div><div class="meta-value">10</div></div>
 </div>
 <div class="sub" style="margin-top:-14px">Supply / borrow figures below are <b>market-wide</b>: a MetaMorpho vault supplies into shared Morpho Blue markets, so borrower positions span all users of those markets, not only debt funded by this vault (which is why market debt can exceed the vault's own assets).</div>
@@ -60,11 +60,11 @@
 <h2>Counterfactual risk dashboard</h2>
 <div class="grid">
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">OracleFreezeReplay <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_bad_debt</div><div class="det-interp">If the oracle freezes while collateral drifts -10%, 0.0% of outstanding debt (1 position) crosses the bad-debt frontier - LTV &gt; 0.952 at LIF 5% - meaning seized collateral could not cover debt-plus-incentive even once the oracle updates.</div></div>
-<div class="det-card" style="border-left-color:#eab308"><div class="det-name">CollateralCascade <span class="badge" style="background:#eab308">WATCH</span></div><div class="det-metric" style="color:#eab308">17.4%</div><div class="det-unit">fraction_liquidatable_debt</div><div class="det-interp">At a -20% collateral shock, 17.4% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 4,567,851,735,657 loan-asset units across affected markets.</div></div>
-<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">DepositorExitShock <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 32,254,301,000,343 vs idle supply 168,143,978,456,007 -&gt; 0.0% would be queue-rationed until borrowers repay.</div></div>
+<div class="det-card" style="border-left-color:#eab308"><div class="det-name">CollateralCascade <span class="badge" style="background:#eab308">WATCH</span></div><div class="det-metric" style="color:#eab308">18.1%</div><div class="det-unit">fraction_liquidatable_debt</div><div class="det-interp">At a -20% collateral shock, 18.1% of debt becomes liquidatable; liquidity gap (debt minus idle supply) is 16,902,998,189,626 loan-asset units across affected markets.</div></div>
+<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">DepositorExitShock <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_rationed</div><div class="det-interp">If top-1 depositor(s) exit, demand is 26,726,938,956,113 vs idle supply 107,764,895,871,876 -&gt; 0.0% would be queue-rationed until borrowers repay.</div></div>
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">UtilizationInversion <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_markets_above_target</div><div class="det-interp">0 / 10 markets are above the 92% utilization band - IRM curves enter the steep regime; depositor withdrawal pressure compounds.</div></div>
 <div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LiquidationLatency <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_unprofitable_to_liquidate</div><div class="det-interp">At 30 gwei and ETH $3500, liquidation cost is ~$36.75; 0.0% of debt sits in 0 positions where liquidator profit (debt × 5%) is below cost - these accrue bad-debt risk during oracle-shock windows.</div></div>
-<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LTVDistributionStress <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_debt_within_5pp_of_lltv</div><div class="det-interp">0.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 78.55%. A small adverse oracle move would push this debt into liquidation.</div></div>
+<div class="det-card" style="border-left-color:#16a34a"><div class="det-name">LTVDistributionStress <span class="badge" style="background:#16a34a">OK</span></div><div class="det-metric" style="color:#16a34a">0.0%</div><div class="det-unit">fraction_debt_within_5pp_of_lltv</div><div class="det-interp">0.0% of outstanding debt sits within 5 percentage points of LLTV. Top-5% LTV avg: 77.17%. A small adverse oracle move would push this debt into liquidation.</div></div>
 </div>
 
 <h2>Sensitivity sweeps</h2>
@@ -82,16 +82,16 @@
 <th style="text-align:right">Utilization</th><th style="text-align:right">LLTV</th><th style="text-align:right">Supply cap</th>
 </tr></thead>
 <tbody>
-<tr><td><code>0x09dc9e7eb5d8...</code></td><td style='text-align:right'>1.87M USDC</td><td style='text-align:right'>1.26M USDC</td><td style='text-align:right'>67.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
-<tr><td><code>0x94b823e6bd8e...</code></td><td style='text-align:right'>11.42M USDC</td><td style='text-align:right'>7.66M USDC</td><td style='text-align:right'>67.0%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
-<tr><td><code>0xbc99de6a8890...</code></td><td style='text-align:right'>4.28M USDC</td><td style='text-align:right'>2.93M USDC</td><td style='text-align:right'>68.4%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1.00B USDC</td></tr>
-<tr><td><code>0x34377fc4f617...</code></td><td style='text-align:right'>3.45K USDC</td><td style='text-align:right'>2.89K USDC</td><td style='text-align:right'>83.8%</td><td style='text-align:right'>77%</td><td style='text-align:right'>20.00M USDC</td></tr>
-<tr><td><code>0x64d65c9a2d91...</code></td><td style='text-align:right'>265.06M USDC</td><td style='text-align:right'>178.05M USDC</td><td style='text-align:right'>67.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1.00B USDC</td></tr>
-<tr><td><code>0x3a85e6197511...</code></td><td style='text-align:right'>153.42M USDC</td><td style='text-align:right'>102.81M USDC</td><td style='text-align:right'>67.0%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
-<tr><td><code>0x85252bb8485c...</code></td><td style='text-align:right'>9.65M USDC</td><td style='text-align:right'>6.35M USDC</td><td style='text-align:right'>65.8%</td><td style='text-align:right'>86%</td><td style='text-align:right'>100.00M USDC</td></tr>
-<tr><td><code>0xb323495f7e41...</code></td><td style='text-align:right'>38.93M USDC</td><td style='text-align:right'>26.15M USDC</td><td style='text-align:right'>67.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
-<tr><td><code>0xc498f4bfdda9...</code></td><td style='text-align:right'>14.02M USDC</td><td style='text-align:right'>9.52M USDC</td><td style='text-align:right'>67.9%</td><td style='text-align:right'>92%</td><td style='text-align:right'>25.00M USDC</td></tr>
-<tr><td><code>0x7e585a933ffe...</code></td><td style='text-align:right'>12.81M USDC</td><td style='text-align:right'>8.60M USDC</td><td style='text-align:right'>67.1%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
+<tr><td><code>0x09dc9e7eb5d8...</code></td><td style='text-align:right'>1.60M USDC</td><td style='text-align:right'>1.26M USDC</td><td style='text-align:right'>78.4%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
+<tr><td><code>0x94b823e6bd8e...</code></td><td style='text-align:right'>10.00M USDC</td><td style='text-align:right'>7.66M USDC</td><td style='text-align:right'>76.6%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
+<tr><td><code>0xbc99de6a8890...</code></td><td style='text-align:right'>23.59M USDC</td><td style='text-align:right'>18.45M USDC</td><td style='text-align:right'>78.2%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1.00B USDC</td></tr>
+<tr><td><code>0x34377fc4f617...</code></td><td style='text-align:right'>3.20K USDC</td><td style='text-align:right'>2.89K USDC</td><td style='text-align:right'>90.3%</td><td style='text-align:right'>77%</td><td style='text-align:right'>20.00M USDC</td></tr>
+<tr><td><code>0x64d65c9a2d91...</code></td><td style='text-align:right'>231.92M USDC</td><td style='text-align:right'>178.38M USDC</td><td style='text-align:right'>76.9%</td><td style='text-align:right'>86%</td><td style='text-align:right'>1.00B USDC</td></tr>
+<tr><td><code>0x3a85e6197511...</code></td><td style='text-align:right'>134.04M USDC</td><td style='text-align:right'>102.84M USDC</td><td style='text-align:right'>76.7%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
+<tr><td><code>0x85252bb8485c...</code></td><td style='text-align:right'>8.43M USDC</td><td style='text-align:right'>6.35M USDC</td><td style='text-align:right'>75.3%</td><td style='text-align:right'>86%</td><td style='text-align:right'>100.00M USDC</td></tr>
+<tr><td><code>0xb323495f7e41...</code></td><td style='text-align:right'>33.29M USDC</td><td style='text-align:right'>25.60M USDC</td><td style='text-align:right'>76.9%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
+<tr><td><code>0xc498f4bfdda9...</code></td><td style='text-align:right'>12.23M USDC</td><td style='text-align:right'>9.46M USDC</td><td style='text-align:right'>77.4%</td><td style='text-align:right'>92%</td><td style='text-align:right'>25.00M USDC</td></tr>
+<tr><td><code>0x7e585a933ffe...</code></td><td style='text-align:right'>11.48M USDC</td><td style='text-align:right'>8.82M USDC</td><td style='text-align:right'>76.8%</td><td style='text-align:right'>86%</td><td style='text-align:right'>200.00M USDC</td></tr>
 </tbody>
 </table>
 
@@ -106,10 +106,10 @@ counterfactual risk monitoring for Morpho MetaMorpho vaults
 </footer>
 
 <script>
-const cascade = {"labels": ["-2%", "-5%", "-10%", "-15%", "-20%", "-25%", "-30%", "-40%", "-50%"], "values": [0.0, 0.01, 2.34, 9.51, 17.39, 26.75, 38.26, 59.88, 95.06]};
-const oracle  = {"labels": ["-2%", "-5%", "-8%", "-10%", "-15%", "-20%", "-25%"], "values": [0.0, 0.0, 0.01, 0.01, 1.56, 3.86, 12.8]};
-const ltv     = {"labels": ["0.00-0.20", "0.20-0.40", "0.40-0.60", "0.60-0.70", "0.70-0.80", "0.80-0.85", "0.85-0.90", "0.90-0.95", "0.95-1.00", "1.00-1.10"], "values": [20, 97, 447, 281, 146, 7, 2, 0, 0, 0]};
-const gas     = {"labels": ["10 gwei", "20 gwei", "30 gwei", "50 gwei", "80 gwei", "120 gwei", "200 gwei", "400 gwei"], "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.11, 0.35]};
+const cascade = {"labels": ["-2%", "-5%", "-10%", "-15%", "-20%", "-25%", "-30%", "-40%", "-50%"], "values": [0.0, 0.01, 2.15, 4.37, 18.12, 24.94, 38.43, 60.62, 93.89]};
+const oracle  = {"labels": ["-2%", "-5%", "-8%", "-10%", "-15%", "-20%", "-25%"], "values": [0.0, 0.0, 0.01, 0.01, 1.5, 2.43, 11.51]};
+const ltv     = {"labels": ["0.00-0.20", "0.20-0.40", "0.40-0.60", "0.60-0.70", "0.70-0.80", "0.80-0.85", "0.85-0.90", "0.90-0.95", "0.95-1.00", "1.00-1.10"], "values": [21, 105, 475, 279, 116, 2, 2, 0, 0, 0]};
+const gas     = {"labels": ["10 gwei", "20 gwei", "30 gwei", "50 gwei", "80 gwei", "120 gwei", "200 gwei", "400 gwei"], "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.11, 0.34]};
 
 const common = {
   responsive: true, maintainAspectRatio: false,
